@@ -49,9 +49,7 @@ fun MovimientoScreen() {
                 )
             }
         }
-        Tab(selected = , onClick = { /*TODO*/ }) {
-            
-        }
+
         when(tabIndex){
             0-> GastoScreen(Modifier.weight(1f))
             1-> IngresoScreen(Modifier.weight(1f))
