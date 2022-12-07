@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="p1">#0C3B2E</color>
+    <color name="p2">#6D9773</color>
+    <color name="p3">#AFD5B4</color>
+
+    <color name="s1">#FFBA00</color>
+
+    <color name="t1">#BB8A52</color>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="red">#E84336</color>
+    <color name="green">#31A853</color>
+    <color name="yellow">#FBBC15</color>
+    <color name="blue">#517BBD</color>
+    <color name="orange">#FF5722</color>
+    <color name="sky">#00BCD4</color>
+</resources>
