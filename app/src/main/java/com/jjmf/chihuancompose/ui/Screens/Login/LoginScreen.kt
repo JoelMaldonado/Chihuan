@@ -50,23 +50,21 @@ fun LoginScreen(
     var menu by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    if (menu){
-        LaunchedEffect(key1 = ""){
+    if (menu) {
+        LaunchedEffect(key1 = "") {
             toMenu()
         }
     }
 
-    if (auth.currentUser != null){
+    if (auth.currentUser != null) {
         viewModel.getId(auth.currentUser?.email!!)
         menu = true
     }
 
     intent?.let {
-        Result(intent = it){user->
-            viewModel.insertar(user)
-            menu = true
-        }
+        Resultado(intent = it, correcto = { menu = true })
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -101,9 +99,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(20.dp))
             Button(
                 onClick = {
-                    google(context) {
-                        intent = it
-                    }
+                    intent = signIn(context)
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = ColorS1),
                 shape = RoundedCornerShape(20.dp)
@@ -121,6 +117,14 @@ fun LoginScreen(
     }
 }
 
+fun signIn(context: Context): Intent {
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken(context.getString(R.string.default_web_client_id))
+        .requestEmail()
+        .build()
+    return GoogleSignIn.getClient(context, gso).signInIntent
+}
+
 fun google(context: Context, intent: (Intent) -> Unit) {
     val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
         .requestIdToken(SERVER_ID)
@@ -131,9 +135,10 @@ fun google(context: Context, intent: (Intent) -> Unit) {
 }
 
 @Composable
-fun Result(intent: Intent, user:(Usuario)->Unit) {
+fun Resultado(intent: Intent, correcto: () -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
     val auth = FirebaseAuth.getInstance()
-    val res = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {  re ->
+    val res =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { re ->
             val task = GoogleSignIn.getSignedInAccountFromIntent(re.data!!)
             val account = task.getResult(ApiException::class.java)!!
             val credential = GoogleAuthProvider.getCredential(account.idToken, null)
@@ -144,7 +149,8 @@ fun Result(intent: Intent, user:(Usuario)->Unit) {
                     foto = account.photoUrl.toString(),
                     correo = account.email
                 )
-                user(usuario)
+                viewModel.insertar(usuario)
+                correcto()
             }
         }
     SideEffect {

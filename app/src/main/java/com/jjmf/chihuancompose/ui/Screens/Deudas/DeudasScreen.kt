@@ -25,6 +25,8 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.jjmf.chihuancompose.Application.BaseApp.Companion.prefs
 import com.jjmf.chihuancompose.Data.Model.Deuda
 import com.jjmf.chihuancompose.Data.Model.Historial
@@ -44,13 +46,14 @@ fun DeudasScreen(
 
     val listado = viewModel.state.value
 
+    val user = Firebase.auth.currentUser?.displayName
     var alerta by remember { mutableStateOf(false) }
     Column(modifier = Modifier
         .fillMaxSize()
         .background(ColorP2),
     horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Titulo("¡Hola Joel!")
+        Titulo("¡Hola $user!")
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
