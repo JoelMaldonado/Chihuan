@@ -1,6 +1,7 @@
 package com.jjmf.chihuancompose.Data.Repository
 
 import com.google.firebase.firestore.CollectionReference
+import com.jjmf.chihuancompose.Application.BaseApp.Companion.prefs
 import com.jjmf.chihuancompose.Data.Module.FirebaseModule
 import com.jjmf.chihuancompose.Data.Model.Deuda
 import kotlinx.coroutines.channels.awaitClose
@@ -21,7 +22,7 @@ class DeudaRepositoryImpl @Inject constructor(
 ): DeudaRepository {
 
     override suspend fun getList(): Flow<List<Deuda>> = callbackFlow {
-        val listado = fb.addSnapshotListener { sna, _ ->
+        val listado = fb.whereEqualTo("idUsuario", prefs.getId()).addSnapshotListener { sna, _ ->
             val lista = mutableListOf<Deuda>()
             for (i in sna!!.documents){
                 val product = i.toObject(Deuda::class.java)

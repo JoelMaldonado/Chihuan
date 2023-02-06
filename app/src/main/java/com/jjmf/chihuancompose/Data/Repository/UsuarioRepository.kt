@@ -1,6 +1,7 @@
 package com.jjmf.chihuancompose.Data.Repository
 
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.ktx.toObject
 import com.jjmf.chihuancompose.Application.BaseApp.Companion.prefs
 import com.jjmf.chihuancompose.Data.Model.Usuario
 import com.jjmf.chihuancompose.Data.Module.FirebaseModule
@@ -35,13 +36,11 @@ class UsuarioRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getListUsuarios(): List<Usuario> {
-        val listado = mutableListOf<Usuario>()
-        fb.get().await().documents.forEach {
-            val ob = it.toObject(Usuario::class.java)!!
-            ob.id = it.id
-            listado.add(ob)
+        return fb.get().await().documents.map {
+            val usu = it.toObject(Usuario::class.java)!!
+            usu.id = it.id
+            usu
         }
-        return listado
     }
 
     override suspend fun insert(usuario: Usuario) {
