@@ -22,4 +22,6 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun historialRepo(repo: HistorialRepositoryImpl): HistorialRepository
+    @Binds
+    abstract fun diarioRepo(repo: DiarioRepositoryImpl): DiarioRepository
 }

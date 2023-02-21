@@ -49,6 +49,12 @@ fun LoginScreen(
     val auth = FirebaseAuth.getInstance()
     val context = LocalContext.current
 
+    if (viewModel.state.toMenu){
+        LaunchedEffect(key1 = true){
+            toMenu()
+        }
+    }
+
     val res =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { re ->
             val task = GoogleSignIn.getSignedInAccountFromIntent(re.data!!)
@@ -62,7 +68,6 @@ fun LoginScreen(
                     correo = account.email
                 )
                 viewModel.insertar(usuario)
-                toMenu()
             }
         }
 

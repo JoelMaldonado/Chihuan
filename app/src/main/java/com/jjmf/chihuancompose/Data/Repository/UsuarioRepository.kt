@@ -44,9 +44,7 @@ class UsuarioRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insert(usuario: Usuario) {
-        fb.add(usuario).addOnSuccessListener {
-            prefs.saveID(it.id)
-        }
+        prefs.saveID(fb.add(usuario).await().id)
     }
 
 }

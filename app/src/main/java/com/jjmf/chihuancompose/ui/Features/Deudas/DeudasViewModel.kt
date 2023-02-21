@@ -1,5 +1,7 @@
-package com.jjmf.chihuancompose.ui.viewModel
+package com.jjmf.chihuancompose.ui.Features.Deudas
 
+import androidx.compose.material.BottomSheetScaffoldState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
@@ -7,19 +9,25 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jjmf.chihuancompose.Application.BaseApp.Companion.prefs
 import com.jjmf.chihuancompose.Data.Model.Deuda
 import com.jjmf.chihuancompose.Data.Model.Historial
+import com.jjmf.chihuancompose.Data.Model.Usuario
 import com.jjmf.chihuancompose.Data.Repository.DeudaRepository
 import com.jjmf.chihuancompose.Data.Repository.HistorialRepository
+import com.jjmf.chihuancompose.Data.Repository.UsuarioRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DeudasViewModel @Inject constructor(
     private val repository: DeudaRepository,
-    private val repoHistorial : HistorialRepository
+    private val repoHistorial : HistorialRepository,
+    private val repoUsuario:UsuarioRepository
 ) : ViewModel() {
+
 
 
     var state by mutableStateOf(DeudaState())
@@ -39,23 +47,12 @@ class DeudasViewModel @Inject constructor(
         }
     }
 
-    data class DeudaState(
-        val cargando:Boolean = false,
-        val listado : List<Deuda> = emptyList(),
-        val alerta:Boolean = false
-    )
 
     fun insertar(deuda: Deuda, historial: Historial) {
         viewModelScope.launch {
             val id = repository.insert(deuda)
             repoHistorial.insert(historial.copy(idDeuda = id))
-        }
-    }
-
-    fun actualizarMonto(hist: Historial, deuda: Deuda) {
-        viewModelScope.launch {
-            repoHistorial.insert(hist)
-            repository.update(deuda)
+            state = state.copy(alerta = false)
         }
     }
 }

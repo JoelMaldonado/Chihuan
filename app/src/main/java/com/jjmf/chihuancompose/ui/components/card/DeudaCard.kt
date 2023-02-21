@@ -1,86 +1,69 @@
-package com.jjmf.chihuancompose.ui.Screens.Deudas
+package com.jjmf.chihuancompose.ui.components.card
 
+import android.content.Context
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.google.firebase.Timestamp
 import com.jjmf.chihuancompose.Data.Model.Deuda
 import com.jjmf.chihuancompose.R
 import com.jjmf.chihuancompose.Util.getFecha
 import com.jjmf.chihuancompose.Util.redondear
 import com.jjmf.chihuancompose.Util.toFecha
-import com.jjmf.chihuancompose.ui.Screens.Deudas.Components.ModificarDeudaAlerta
 import com.jjmf.chihuancompose.ui.theme.ColorOrange
 import com.jjmf.chihuancompose.ui.theme.ColorP1
-import com.jjmf.chihuancompose.ui.theme.ColorS1
-import com.jjmf.chihuancompose.ui.viewModel.DeudasViewModel
 
 
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun DeudaCard(
     modifier: Modifier = Modifier,
     deuda: Deuda,
-    toInformacion: (String) -> Unit,
+    toDetalle: () -> Unit,
 ) {
-    var bool by remember { mutableStateOf(false) }
-
-    var code by remember { mutableStateOf(0) }
-
-    if (bool) ModificarDeudaAlerta(code = code, deuda) { bool = false }
-
+    val context = LocalContext.current
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(10.dp), elevation = 5.dp, shape = RoundedCornerShape(20.dp)
+            .padding(10.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = 5.dp,
+        onClick = toDetalle,
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Column(Modifier.weight(1f)) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)){
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Nombre(deuda.titulo)
-                Monto(deuda.dinero)
                 Fecha(deuda.fecha)
-                TextButton(onClick = {
-                    toInformacion(deuda.id!!)
-                }) {
-                    Text(
-                        text = "Mas información",
-                        color = ColorS1,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowDown,
-                        contentDescription = null,
-                        tint = ColorS1
-                    )
-                }
-            }
-            Dar {
-                bool = true
-                code = 2
-            }
-            Spacer(modifier = Modifier.width(10.dp))
-            Recibir {
-                bool = true
-                code = 1
+                Spacer(modifier = Modifier.height(5.dp))
+                Monto(dinero = deuda.dinero, modifier = Modifier.align(Alignment.End))
             }
 
+            val dinero = deuda.dinero ?: 0.0
+            val color = if (dinero < 0) Color.Red else ColorP1
+            Box(modifier = Modifier
+                .align(Alignment.TopEnd)
+                .size(15.dp)
+                .clip(CircleShape)
+                .background(color))
         }
     }
 }
@@ -90,32 +73,16 @@ private fun Nombre(nombre: String?) {
     Text(
         text = nombre.toString(),
         color = ColorP1,
-        fontWeight = FontWeight.Bold,
-        fontSize = 18.sp
+        fontWeight = FontWeight.Bold
     )
 }
 
 @Composable
-private fun Monto(dinero: Double?) {
-    Row {
-        if (dinero != null) {
-            if (dinero < 0) {
-                Text(
-                    text = "Deuda de:",
-                    color = Color.Red,
-                    fontWeight = FontWeight.SemiBold
-                )
-            } else {
-                Text(
-                    text = "Te debe:",
-                    color = ColorP1,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
-            Text(text = " S/.${dinero.redondear()}")
-        } else {
-            Text(text = "Monto no agregado")
-        }
+private fun Monto(modifier: Modifier, dinero: Double?) {
+    if (dinero != null) {
+        Text(text = " S/${dinero.redondear()}", modifier = modifier, fontWeight = FontWeight.SemiBold)
+    } else {
+        Text(text = "Monto no agregado", modifier = modifier)
     }
 }
 
@@ -152,17 +119,21 @@ private fun Fecha(fecha: Timestamp?) {
 @Composable
 private fun Dar(click: () -> Unit) {
     FloatingActionButton(onClick = { click() }, backgroundColor = ColorP1) {
-        Icon(painter = painterResource(id = R.drawable.ic_dar),
+        Icon(
+            painter = painterResource(id = R.drawable.ic_dar),
             contentDescription = null,
-            tint = Color.White)
+            tint = Color.White
+        )
     }
 }
 
 @Composable
 private fun Recibir(click: () -> Unit) {
     FloatingActionButton(onClick = { click() }, backgroundColor = ColorOrange) {
-        Icon(painter = painterResource(id = R.drawable.ic_recibir),
+        Icon(
+            painter = painterResource(id = R.drawable.ic_recibir),
             contentDescription = null,
-            tint = Color.White)
+            tint = Color.White
+        )
     }
 }

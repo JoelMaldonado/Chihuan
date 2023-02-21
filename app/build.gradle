@@ -4,6 +4,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -106,4 +107,7 @@ dependencies {
 
     //Lottie
     implementation "com.airbnb.android:lottie-compose:5.2.0"
+
+    //Sweet Alert
+    implementation "com.github.f0ris.sweetalert:library:1.6.2"
 }

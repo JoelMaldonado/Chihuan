@@ -19,18 +19,19 @@ class LoginViewModel @Inject constructor(
     private  val repository: UsuarioRepository
 ) : ViewModel(){
 
+    var state by mutableStateOf(LoginState())
     fun insertar(usuario: Usuario) {
         viewModelScope.launch(Dispatchers.IO){
             val list = repository.getListUsuarios().map { it.correo }
-            Log.d("Tagito", list.toString())
-            if (usuario.correo in list) repository.insert(usuario)
+            if (usuario.correo !in list) repository.insert(usuario)
+            state = state.copy(toMenu = true)
         }
     }
-    var state by mutableStateOf(LoginState())
     data class LoginState(
         val cargando:Boolean = false,
         val usuario: Usuario? = null,
-        val mensajeError:String? = null
+        val mensajeError:String? = null,
+        val toMenu:Boolean = false
     )
 
     fun getId(email: String) {

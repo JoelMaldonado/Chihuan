@@ -43,3 +43,14 @@ fun esNumero(s: String): Boolean {
         false
     }
 }
+
+fun getFecha2(milliseconds:Long=System.currentTimeMillis()):String{
+    val format = "dd-MM-yyyy"
+    return SimpleDateFormat(format, Locale.getDefault())
+        .format(Date(milliseconds)).toString()
+}
+fun getHora(milliseconds:Long=System.currentTimeMillis()):String{
+    val format = "HH:mm"
+    return SimpleDateFormat(format, Locale.getDefault())
+        .format(Date(milliseconds)).toString()
+}

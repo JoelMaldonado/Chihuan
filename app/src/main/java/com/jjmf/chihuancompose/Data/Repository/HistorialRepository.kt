@@ -11,9 +11,9 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface HistorialRepository {
-    suspend fun getListFlow(deuda: Deuda): Flow<List<Historial>>
+    suspend fun getListFlow(idDeuda: String): Flow<List<Historial>>
     suspend fun insert(hist: Historial)
-    suspend fun delete(hist: Historial)
+    suspend fun delete(idDeuda: String)
     suspend fun getList(idDeuda:String) : List<Historial>
 }
 
@@ -21,12 +21,12 @@ class HistorialRepositoryImpl @Inject constructor(
     @FirebaseModule.HistorialCollection private val fb: CollectionReference,
 ) : HistorialRepository {
 
-    override suspend fun getListFlow(deuda: Deuda): Flow<List<Historial>> = callbackFlow {
+    override suspend fun getListFlow(idDeuda: String): Flow<List<Historial>> = callbackFlow {
         val listado = fb.addSnapshotListener { value, error ->
             val list = mutableListOf<Historial>()
             value!!.documents.forEach {
                 val product = it.toObject(Historial::class.java)
-                if (product!!.idDeuda == deuda.id) {
+                if (product!!.idDeuda == idDeuda) {
                     list.add(product)
                 }
             }
@@ -40,8 +40,10 @@ class HistorialRepositoryImpl @Inject constructor(
         fb.add(hist)
     }
 
-    override suspend fun delete(hist: Historial) {
-        fb.document(hist.id!!).delete()
+    override suspend fun delete(idDeuda: String) {
+        fb.whereEqualTo("idDeuda", idDeuda).get().await().forEach {
+            fb.document(it.id).delete()
+        }
     }
 
     override suspend fun getList(idDeuda: String) : List<Historial>{
