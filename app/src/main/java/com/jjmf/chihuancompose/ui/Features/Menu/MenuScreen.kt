@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Money
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -48,7 +49,7 @@ fun MenuScreen(
             shape = RoundedCornerShape(topStart = 80f),
             color = Color.White
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally){
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 NavegacionMenu(
                     nav = navMenuController,
                     modifier = Modifier.weight(1f),
@@ -61,7 +62,7 @@ fun MenuScreen(
 }
 
 @Composable
-fun MenuBottom(nav:NavHostController) {
+fun MenuBottom(nav: NavHostController) {
     val isSelected = remember { mutableStateOf(1) }
     Card(
         modifier = Modifier
@@ -96,13 +97,23 @@ fun MenuBottom(nav:NavHostController) {
                     nav.navigate(Rutas.Diario.route)
                 }
             )
+            ItemMenu(
+                icon = Icons.Default.History,
+                isSelected = isSelected,
+                code = 3,
+                click = {
+
+                    nav.backQueue.clear()
+                    nav.navigate(Rutas.Reporte.route)
+                }
+            )
         }
     }
 }
 
 @Composable
 fun ItemMenu(
-    icon:ImageVector,
+    icon: ImageVector,
     isSelected: MutableState<Int>,
     code: Int,
     click: () -> Unit,
@@ -117,7 +128,7 @@ fun ItemMenu(
             }
         ) {
             Icon(
-                imageVector =icon,
+                imageVector = icon,
                 contentDescription = null,
                 tint = if (isSelected.value == code) Color.White else Color.Black
             )

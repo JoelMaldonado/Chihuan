@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import com.jjmf.chihuancompose.Data.Model.Deuda
 import com.jjmf.chihuancompose.ui.Features.Diario.DiarioScreen
 import com.jjmf.chihuancompose.ui.Features.Deudas.DeudasScreen
+import com.jjmf.chihuancompose.ui.Features.Reporte.ReporteScreen
 
 
 @Composable
@@ -22,6 +23,10 @@ fun NavegacionMenu(nav: NavHostController, modifier: Modifier, toDetalle:(Deuda?
         }
         composable(Rutas.Diario.route){
             DiarioScreen()
+        }
+
+        composable(Rutas.Reporte.route){
+            ReporteScreen()
         }
     }
 }

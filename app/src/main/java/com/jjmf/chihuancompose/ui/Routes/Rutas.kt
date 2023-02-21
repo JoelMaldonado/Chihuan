@@ -9,5 +9,6 @@ sealed class Rutas(val route:String){
     object Menu : Rutas("Menu")
     object Deudas : Rutas("Deudas")
     object Diario : Rutas("Diario")
+    object Reporte : Rutas("Reporte")
     object Detalle:Rutas("Detalle")
 }
