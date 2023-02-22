@@ -36,12 +36,14 @@ fun DiarioScreen(
         AlertaIngreso()
     }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier.weight(1f)
+        ){
             items(viewModel.state.listado){
                 ItemDiario(it)
             }
@@ -49,8 +51,7 @@ fun DiarioScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 40.dp)
-                .align(Alignment.BottomCenter),
+                .padding(horizontal = 40.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
