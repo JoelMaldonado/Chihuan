@@ -1,5 +1,6 @@
 package com.jjmf.chihuancompose.Data.Repository
 
+import android.util.Log
 import com.google.firebase.firestore.CollectionReference
 import com.jjmf.chihuancompose.Data.Module.FirebaseModule
 import com.jjmf.chihuancompose.Data.Model.Deuda
@@ -13,7 +14,8 @@ import javax.inject.Inject
 interface HistorialRepository {
     suspend fun getListFlow(idDeuda: String): Flow<List<Historial>>
     suspend fun insert(hist: Historial)
-    suspend fun delete(idDeuda: String)
+    suspend fun delete(idHistorial: String)
+    suspend fun deleteTotal(idDeuda: String)
     suspend fun getList(idDeuda:String) : List<Historial>
 }
 
@@ -22,11 +24,11 @@ class HistorialRepositoryImpl @Inject constructor(
 ) : HistorialRepository {
 
     override suspend fun getListFlow(idDeuda: String): Flow<List<Historial>> = callbackFlow {
-        val listado = fb.addSnapshotListener { value, error ->
+        val listado = fb.whereEqualTo("idDeuda", idDeuda).addSnapshotListener { value, error ->
             val list = mutableListOf<Historial>()
             value!!.documents.forEach {
-                val product = it.toObject(Historial::class.java)
-                if (product!!.idDeuda == idDeuda) {
+                it.toObject(Historial::class.java)?.let {product->
+                    product.id = it.id
                     list.add(product)
                 }
             }
@@ -40,7 +42,11 @@ class HistorialRepositoryImpl @Inject constructor(
         fb.add(hist)
     }
 
-    override suspend fun delete(idDeuda: String) {
+    override suspend fun delete(idHistorial: String) {
+        fb.document(idHistorial).delete()
+    }
+
+    override suspend fun deleteTotal(idDeuda: String) {
         fb.whereEqualTo("idDeuda", idDeuda).get().await().forEach {
             fb.document(it.id).delete()
         }

@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -25,6 +26,8 @@ import com.jjmf.chihuancompose.ui.Features.Deudas.Components.CajaDescrip
 import com.jjmf.chihuancompose.ui.Features.Diario.DiarioViewModel
 import com.jjmf.chihuancompose.ui.theme.ColorP2
 import com.jjmf.chihuancompose.ui.theme.ColorP3
+import com.jjmf.chihuancompose.ui.theme.ColorP4
+import com.jjmf.chihuancompose.ui.theme.ColorRed
 
 
 @Composable
@@ -74,13 +77,24 @@ fun AlertaIngreso(
                     horizontalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
                     OutlinedButton(
-                        onClick = {},
-                        border = BorderStroke(width = 1.dp, color = ColorP2)
+                        onClick = {
+                            viewModel.state = viewModel.state.copy(alertaIngreso = false)
+                                  },
+                        border = BorderStroke(width = 1.dp, color = ColorP2),
+                        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.White)
                     ) {
                         Text(text = "Cancelar", color = ColorP2)
                     }
-                    Button(onClick = {
-                        viewModel.insertarIngreso()}) {
+                    Button(
+                        onClick = {
+                        viewModel.insertarIngreso()},
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = ColorP2,
+                            contentColor = Color.White,
+                            disabledBackgroundColor = ColorP2.copy(0.5f)
+                        ),
+                        enabled = viewModel.monto.text.toDouble() != 0.0 && viewModel.descrip.isNotEmpty()
+                    ) {
                         Text(text = "Registrar")
                     }
                 }
@@ -106,13 +120,17 @@ fun CajaDinero(
         leadingIcon = {
             Text(
                 text = "S/.",
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                color = color
             )
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = color,
             cursorColor = color,
-            focusedLabelColor = color
-        )
+            focusedLabelColor = color,
+            unfocusedBorderColor = Color.Gray,
+            unfocusedLabelColor = Color.Gray
+        ),
+        textStyle = TextStyle(color = Color.Black)
     )
 }

@@ -1,5 +1,7 @@
 package com.jjmf.chihuancompose.Util
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.google.firebase.Timestamp
@@ -17,8 +19,12 @@ fun Double.invertir() = if (this > 0) -this else this - this * 2
 
 fun Date?.toFecha(pattern:String = "dd/MM/yyyy HH:mm") = if (this!=null) SimpleDateFormat(pattern, Locale.getDefault()).format(this) else "Fecha no encontrada"
 
+
 fun getFecha(pattern: String = "dd/MM/yyyy HH:mm") = SimpleDateFormat(pattern, Locale.getDefault()).format(System.currentTimeMillis())
 
+fun Context.show(texto:String?){
+    Toast.makeText(this, texto, Toast.LENGTH_SHORT).show()
+}
 
 fun toNumero(numString: String): TextFieldValue {
     val data = if (numString.trim() == "") "0"
@@ -44,8 +50,14 @@ fun esNumero(s: String): Boolean {
     }
 }
 
+fun String.toFormat(date: Date) = SimpleDateFormat(this, Locale.getDefault()).format(date)
 fun getFecha2(milliseconds:Long=System.currentTimeMillis()):String{
     val format = "dd-MM-yyyy"
+    return SimpleDateFormat(format, Locale.getDefault())
+        .format(Date(milliseconds)).toString()
+}
+fun getDia(milliseconds:Long=System.currentTimeMillis()):String{
+    val format = "EEEE"
     return SimpleDateFormat(format, Locale.getDefault())
         .format(Date(milliseconds)).toString()
 }

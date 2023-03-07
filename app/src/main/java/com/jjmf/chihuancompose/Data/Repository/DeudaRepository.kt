@@ -11,26 +11,32 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface DeudaRepository {
-    suspend fun getList():Flow<List<Deuda>>
+    suspend fun getList(): Flow<List<Deuda>>
     suspend fun delete(id: String)
     suspend fun update(deuda: Deuda)
-    suspend fun insert(deuda: Deuda) : String
+    suspend fun insert(deuda: Deuda): String
+    suspend fun insertDoble(deuda: Deuda): String
 }
 
 class DeudaRepositoryImpl @Inject constructor(
-    @FirebaseModule.DeudaCollection private val fb:CollectionReference
-): DeudaRepository {
+    @FirebaseModule.DeudaCollection private val fb: CollectionReference,
+) : DeudaRepository {
 
     override suspend fun getList(): Flow<List<Deuda>> = callbackFlow {
-        val listado = fb.whereEqualTo("idUsuario", prefs.getId()).addSnapshotListener { sna, _ ->
-            val lista = mutableListOf<Deuda>()
-            for (i in sna!!.documents){
-                val product = i.toObject(Deuda::class.java)
-                product!!.id = i.id
-                lista.add(product)
-            }
-            trySend(lista).isSuccess
-        }
+        val listado =
+            fb.addSnapshotListener { sna, _ ->
+                    val lista = mutableListOf<Deuda>()
+                    for (i in sna!!.documents) {
+                        val product = i.toObject(Deuda::class.java)
+                        product!!.id = i.id
+                        if (product.idUsuario == prefs.getId()){
+                            lista.add(product)
+                        }else if (product.idUsuario2 == prefs.getId()){
+                            lista.add(product.copy(segundo = true))
+                        }
+                    }
+                    trySend(lista).isSuccess
+                }
 
         awaitClose { listado.remove() }
     }
@@ -43,12 +49,12 @@ class DeudaRepositoryImpl @Inject constructor(
         fb.document(deuda.id!!).set(deuda)
     }
 
-    override suspend fun insert(deuda: Deuda) : String {
-        var id = ""
-        fb.add(deuda).addOnSuccessListener {
-            id = it.id
-        }.await()
-        return id
+    override suspend fun insert(deuda: Deuda): String {
+        return fb.add(deuda).await().id
+    }
+
+    override suspend fun insertDoble(deuda: Deuda): String {
+        return fb.add(deuda).await().id
     }
 
 }

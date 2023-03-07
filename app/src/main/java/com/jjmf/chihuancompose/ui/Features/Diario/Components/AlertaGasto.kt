@@ -19,6 +19,7 @@ import com.jjmf.chihuancompose.Util.toNumero
 import com.jjmf.chihuancompose.ui.Features.Deudas.Components.CajaDescrip
 import com.jjmf.chihuancompose.ui.Features.Diario.DiarioViewModel
 import com.jjmf.chihuancompose.ui.theme.ColorP2
+import com.jjmf.chihuancompose.ui.theme.ColorP4
 import com.jjmf.chihuancompose.ui.theme.ColorRed
 
 
@@ -72,19 +73,24 @@ fun AlertaGasto(
                     horizontalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
                     OutlinedButton(
-                        onClick = {},
-                        border = BorderStroke(width = 1.dp, color = ColorRed)
+                        onClick = {
+                            viewModel.state = viewModel.state.copy(alertaGasto = false)
+                        },
+                        border = BorderStroke(width = 1.dp, color = ColorRed),
+                        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.White)
                     ) {
                         Text(text = "Cancelar", color = ColorRed)
                     }
                     Button(
                         onClick = {
-                                  viewModel.insertarGasto()
+                            viewModel.insertarGasto()
                         },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = ColorRed,
-                            contentColor = Color.White
-                        )
+                            contentColor = Color.White,
+                            disabledBackgroundColor = ColorRed.copy(0.5f)
+                        ),
+                        enabled = viewModel.monto.text.toDouble() != 0.0 && viewModel.descrip.isNotEmpty()
                     ) {
                         Text(text = "Registrar")
                     }

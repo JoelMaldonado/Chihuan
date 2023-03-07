@@ -8,8 +8,10 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Deuda(
     val titulo: String? = null,
-    val dinero: Double? = null,
     val fecha: Timestamp? = null,
     val idUsuario: String? = null,
+    val idUsuario2: String? = null,
+    val doble:Boolean = false,
+    @get:Exclude val segundo:Boolean = false,
     @get:Exclude var id: String? = null,
 ) : Parcelable

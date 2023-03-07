@@ -1,23 +1,19 @@
 package com.jjmf.chihuancompose.ui.Features.Deudas.Components
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.Timestamp
-import com.jjmf.chihuancompose.Application.BaseApp
-import com.jjmf.chihuancompose.Data.Model.Deuda
-import com.jjmf.chihuancompose.Data.Model.Historial
 import com.jjmf.chihuancompose.Util.esNumero
-import com.jjmf.chihuancompose.Util.invertir
-import com.jjmf.chihuancompose.Util.redondear
 import com.jjmf.chihuancompose.ui.Features.Deudas.DeudasViewModel
 import com.jjmf.chihuancompose.ui.theme.ColorP2
 
@@ -26,33 +22,24 @@ import com.jjmf.chihuancompose.ui.theme.ColorP2
 fun BotonInsertDeuda(
     viewModel: DeudasViewModel = hiltViewModel(),
 ) {
+    val bool = (if (esNumero(viewModel.monto.text)) viewModel.monto.text.toDouble() > 0 else false) && viewModel.titulo.isNotEmpty()
     Button(
         onClick = {
-            val numero = viewModel.monto.text.toDouble().redondear()
-            val deuda = Deuda(
-                titulo = viewModel.titulo,
-                dinero = if (viewModel.bool) numero else numero.invertir(),
-                fecha = Timestamp.now(),
-                idUsuario = BaseApp.prefs.getId()
-            )
-            val historial = Historial(
-                fecha = Timestamp.now(),
-                dinero = deuda.dinero,
-                descripcion = viewModel.descrip
-            )
-            viewModel.insertar(deuda, historial)
+            viewModel.insertar()
         },
         colors = ButtonDefaults.buttonColors(
             backgroundColor = ColorP2,
             contentColor = Color.White,
             disabledBackgroundColor = Color.Gray.copy(0.5f)
         ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 30.dp),
-        shape = RoundedCornerShape(20.dp),
-        enabled = (if (esNumero(viewModel.monto.text)) viewModel.monto.text.toDouble() > 0 else false) && viewModel.titulo.isNotEmpty()
+        enabled = bool
     ) {
-        Text(text = "Aceptar")
+        Icon(
+            imageVector = Icons.Default.Check,
+            contentDescription = null,
+            tint = if (bool) Color.White else Color.Gray.copy(0.5f)
+        )
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(text = "Aceptar", color = if (bool) Color.White else Color.Gray.copy(0.5f))
     }
 }

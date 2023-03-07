@@ -5,104 +5,106 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Money
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import cn.pedant.SweetAlert.SweetAlertDialog
 import com.jjmf.chihuancompose.Data.Model.Deuda
+import com.jjmf.chihuancompose.ui.Features.Detalle.Components.AlertaEliminarDeuda
+import com.jjmf.chihuancompose.ui.Features.Detalle.Components.AlertaModificarDeuda
 import com.jjmf.chihuancompose.ui.Features.Detalle.Components.ItemHistorial
-import com.jjmf.chihuancompose.ui.Features.Detalle.Components.ModificarDeudaBottom
+import com.jjmf.chihuancompose.ui.Features.Deudas.Components.SinDeuda
 import com.jjmf.chihuancompose.ui.Features.Deudas.Components.TituloAgregarDeuda
+import com.jjmf.chihuancompose.ui.theme.ColorOrange
+import com.jjmf.chihuancompose.ui.theme.ColorP2
+import com.jjmf.chihuancompose.ui.theme.ColorRed
+import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DetalleScreen(
     deuda: Deuda,
-    back:()->Unit,
-    viewModel: DetalleViewModel = hiltViewModel()
+    back: () -> Unit,
+    viewModel: DetalleViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(key1 = true) {
         viewModel.getList(idDeuda = deuda.id ?: "")
     }
 
-    val context = LocalContext.current
-    viewModel.bottomState = rememberBottomSheetScaffoldState()
-    viewModel.coroutine = rememberCoroutineScope()
+    if (viewModel.state.alertaModificar) {
+        AlertaModificarDeuda(deuda)
+    }
 
-    BottomSheetScaffold(
+    if (viewModel.state.alertaEliminar) {
+        AlertaEliminarDeuda(deuda = deuda, back = back)
+    }
+    Column(
         modifier = Modifier.fillMaxSize(),
-        scaffoldState = viewModel.bottomState,
-        sheetContent = {
-            ModificarDeudaBottom(deuda = deuda)
-        },
-        sheetPeekHeight = 0.dp
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
+        TituloAgregarDeuda("Detalles")
+        LazyColumn(
+            modifier = Modifier.weight(1f)
         ) {
-            TituloAgregarDeuda("Detalles")
-            LazyColumn(
-                modifier = Modifier.weight(1f)
-            ) {
-                if (viewModel.state.isEmpty()) {
-                    item {
-                        Text(text = "Sin resultado")
-                    }
-                }
-                items(viewModel.state) {
-                    ItemHistorial(it)
+            if (viewModel.state.listado.isEmpty()) {
+                item {
+                    SinDeuda(texto = "Sin Historial", modifier = Modifier.padding(top = 200.dp))
                 }
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
+            items(viewModel.state.listado) {
+                ItemHistorial(it, neg = deuda.segundo)
+            }
+        }
+
+        if (viewModel.state.mantenimiento){
+            Snackbar(
+                backgroundColor = ColorOrange,
+                modifier = Modifier.padding(20.dp)
             ) {
-                FloatingActionButton(
-                    onClick = {
-                        SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE).apply {
-                            titleText = "Eliminar Deuda"
-                            contentText = "Se elimininara '${deuda.titulo}', ¿Estas seguro?"
-                            setConfirmButton("Eliminar"){
-                                dismissWithAnimation()
-                                viewModel.delete(deuda.id!!)
-                                back()
-                            }
-                            setCancelButton("Cancelar"){
-                                dismissWithAnimation()
-                            }
-                            show()
-                        }
-                    },
-                    backgroundColor = Color.Red
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
-                FloatingActionButton(
-                    onClick = viewModel::open,
-                    backgroundColor = Color.Green
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Money,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
+                Text(text = "En manteminiento", color = Color.White)
+                LaunchedEffect(key1 = true) {
+                    delay(2500)
+                    viewModel.state = viewModel.state.copy(mantenimiento = false)
                 }
             }
         }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            FloatingActionButton(
+                onClick = {
+                    viewModel.state = viewModel.state.copy(alertaEliminar = true)
+                },
+                backgroundColor = ColorRed
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
+            FloatingActionButton(
+                onClick = {
+                    viewModel.state = viewModel.state.copy(alertaModificar = true)
+                },
+                backgroundColor = ColorP2
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
+        }
+
     }
 }

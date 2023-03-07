@@ -56,11 +56,7 @@ fun DiarioScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             FabIngreso()
-            if (viewModel.state.contador<0){
-                Text(text = "Gastos: S/${viewModel.state.contador}", fontWeight = FontWeight.SemiBold, color = ColorRed)
-            }else{
-                Text(text = "Ingresos: S/${viewModel.state.contador}", fontWeight = FontWeight.SemiBold, color = ColorP2)
-            }
+            Text(text = "Billetera: S/${viewModel.state.contador}", fontWeight = FontWeight.SemiBold, color = if (viewModel.state.contador<0) ColorRed else ColorP2)
             FabGasto()
         }
     }

@@ -1,42 +1,39 @@
 package com.jjmf.chihuancompose.ui.components.card
 
-import android.content.Context
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import cn.pedant.SweetAlert.SweetAlertDialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.Timestamp
 import com.jjmf.chihuancompose.Data.Model.Deuda
 import com.jjmf.chihuancompose.R
 import com.jjmf.chihuancompose.Util.getFecha
+import com.jjmf.chihuancompose.Util.invertir
 import com.jjmf.chihuancompose.Util.redondear
 import com.jjmf.chihuancompose.Util.toFecha
+import com.jjmf.chihuancompose.ui.Features.Deudas.DeudasViewModel
+import com.jjmf.chihuancompose.ui.Features.Deudas.primero
 import com.jjmf.chihuancompose.ui.theme.ColorOrange
 import com.jjmf.chihuancompose.ui.theme.ColorP1
+import com.jjmf.chihuancompose.ui.theme.ColorP2
+import com.jjmf.chihuancompose.ui.theme.ColorRed
 
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DeudaCard(
     modifier: Modifier = Modifier,
     deuda: Deuda,
     toDetalle: () -> Unit,
+    viewModel: DeudasViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -44,26 +41,35 @@ fun DeudaCard(
         shape = RoundedCornerShape(20.dp),
         elevation = 5.dp,
         onClick = toDetalle,
+        backgroundColor = Color.White
     ) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)){
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        ) {
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Nombre(deuda.titulo)
+                if (deuda.doble){
+                    if (deuda.segundo){
+                        val nombre = viewModel.getUsuario(deuda.idUsuario).collectAsState(initial = null).value
+                        Nombre(nombre?.nombres.primero() + " "+ nombre?.apellido.primero())
+                    }else{
+                        val nombre = viewModel.getUsuario(deuda.idUsuario2).collectAsState(initial = null).value
+                        Nombre(nombre?.nombres.primero() + " "+ nombre?.apellido.primero())
+                    }
+                }else{
+                    Nombre(deuda.titulo)
+                }
                 Fecha(deuda.fecha)
                 Spacer(modifier = Modifier.height(5.dp))
-                Monto(dinero = deuda.dinero, modifier = Modifier.align(Alignment.End))
+                if (deuda.segundo){
+                    Monto(deuda = deuda, modifier = Modifier.align(Alignment.End), neg = true)
+                }else{
+                    Monto(deuda = deuda, modifier = Modifier.align(Alignment.End))
+                }
             }
-
-            val dinero = deuda.dinero ?: 0.0
-            val color = if (dinero < 0) Color.Red else ColorP1
-            Box(modifier = Modifier
-                .align(Alignment.TopEnd)
-                .size(15.dp)
-                .clip(CircleShape)
-                .background(color))
         }
     }
 }
@@ -78,12 +84,21 @@ private fun Nombre(nombre: String?) {
 }
 
 @Composable
-private fun Monto(modifier: Modifier, dinero: Double?) {
-    if (dinero != null) {
-        Text(text = " S/${dinero.redondear()}", modifier = modifier, fontWeight = FontWeight.SemiBold)
-    } else {
-        Text(text = "Monto no agregado", modifier = modifier)
-    }
+private fun Monto(
+    modifier: Modifier,
+    deuda: Deuda,
+    neg:Boolean = false,
+    viewModel: DeudasViewModel = hiltViewModel(),
+) {
+    val total = viewModel.getTotal(deuda.id ?: "").collectAsState(initial = 0.0).value
+    val num = if (neg) total.invertir() else total
+
+    Text(
+        text = " S/${num}",
+        modifier = modifier,
+        fontWeight = FontWeight.SemiBold,
+        color = if (num < 0) ColorRed else ColorP2
+    )
 }
 
 @Composable
@@ -102,13 +117,13 @@ private fun Fecha(fecha: Timestamp?) {
         }
         when (diaFecha) {
             hoy -> {
-                Text(text = "Hoy $apm")
+                Text(text = "Hoy $apm", color = Color.Black)
             }
             ayer -> {
-                Text(text = "Ayer $apm")
+                Text(text = "Ayer $apm", color = Color.Black)
             }
             else -> {
-                Text(text = "${fecha.toDate().toFecha("dd/MM")} $apm")
+                Text(text = "${fecha.toDate().toFecha("dd/MM")} $apm", color = Color.Black)
             }
         }
     } else {

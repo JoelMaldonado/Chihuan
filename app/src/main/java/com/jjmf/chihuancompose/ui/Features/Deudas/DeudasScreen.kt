@@ -1,28 +1,21 @@
 package com.jjmf.chihuancompose.ui.Features.Deudas
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jjmf.chihuancompose.Data.Model.Deuda
+import com.jjmf.chihuancompose.ui.Features.Deudas.Components.AgregarDeudaAlerta
 import com.jjmf.chihuancompose.ui.Features.Deudas.Components.DeudaCardAgregar
 import com.jjmf.chihuancompose.ui.Features.Deudas.Components.SinDeuda
-import com.jjmf.chihuancompose.ui.Features.Deudas.Components.AgregarDeudaAlerta
-import com.jjmf.chihuancompose.ui.Screens.Menu.Components.Titulo
 import com.jjmf.chihuancompose.ui.components.card.DeudaCard
-import com.jjmf.chihuancompose.ui.theme.ColorP2
-import com.jjmf.chihuancompose.ui.Features.Deudas.DeudasViewModel
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -30,7 +23,6 @@ fun DeudasScreen(
     viewModel: DeudasViewModel = hiltViewModel(),
     toDetalle: (Deuda?) -> Unit,
 ) {
-
 
 
     if (viewModel.state.alerta) {

@@ -1,5 +1,6 @@
 package com.jjmf.chihuancompose.ui.Features.Menu
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,20 +15,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.jjmf.chihuancompose.Data.Model.Deuda
 import com.jjmf.chihuancompose.ui.Routes.NavegacionMenu
 import com.jjmf.chihuancompose.ui.Routes.Rutas
-import com.jjmf.chihuancompose.ui.Screens.Menu.Components.Titulo
+import com.jjmf.chihuancompose.ui.components.Titulo
 import com.jjmf.chihuancompose.ui.theme.ColorP2
 import com.jjmf.chihuancompose.ui.theme.ColorP3
 
 @Composable
 fun MenuScreen(
     toDetalle: (Deuda?) -> Unit,
+    toPerfil:()->Unit,
+    finish:()->Unit,
     viewModel: MenuViewModel = hiltViewModel(),
 ) {
 
@@ -35,13 +40,32 @@ fun MenuScreen(
         viewModel.getUsuario()
     }
     val navMenuController = rememberNavController()
+
+    val context = LocalContext.current
+    BackHandler() {
+        SweetAlertDialog(context,SweetAlertDialog.WARNING_TYPE).apply {
+            titleText = "¿Estas seguro de salir?"
+            confirmButtonBackgroundColor = ColorP2.hashCode()
+            setConfirmButton("Salir"){
+                finish()
+                dismissWithAnimation()
+            }
+            setCancelButton("Cancelar"){
+                dismissWithAnimation()
+            }
+            show()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(ColorP2),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Titulo()
+        Titulo(
+            toPerfil = toPerfil
+        )
         Surface(
             modifier = Modifier
                 .fillMaxWidth()

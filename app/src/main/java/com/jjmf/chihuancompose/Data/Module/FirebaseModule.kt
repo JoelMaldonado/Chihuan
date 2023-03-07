@@ -1,10 +1,7 @@
 package com.jjmf.chihuancompose.Data.Module
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.jjmf.chihuancompose.Util.FB_DEUDAS
-import com.jjmf.chihuancompose.Util.FB_DIARIO
-import com.jjmf.chihuancompose.Util.FB_HISTORIAL
-import com.jjmf.chihuancompose.Util.FB_USUARIOS
+import com.jjmf.chihuancompose.Util.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

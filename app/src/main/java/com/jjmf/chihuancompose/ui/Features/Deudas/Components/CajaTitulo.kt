@@ -4,6 +4,8 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jjmf.chihuancompose.ui.Features.Deudas.DeudasViewModel
 import com.jjmf.chihuancompose.ui.theme.ColorP2
@@ -20,7 +22,11 @@ fun CajaTitulo(
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = ColorP2,
             cursorColor = ColorP2,
-            focusedLabelColor = ColorP2
-        )
+            focusedLabelColor = ColorP2,
+            unfocusedBorderColor = Color.Gray,
+            unfocusedLabelColor = Color.Gray
+        ),
+        textStyle = TextStyle(color = Color.Black),
+        enabled = !viewModel.isQr
     )
 }

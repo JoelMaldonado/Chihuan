@@ -77,6 +77,9 @@ dependencies {
     //Firestore
     implementation "com.google.firebase:firebase-firestore-ktx"
 
+    //Messaging
+    implementation "com.google.firebase:firebase-messaging-ktx"
+
     //HILT COMPOSE
     implementation "com.google.dagger:hilt-android:$hilt_version"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
@@ -110,4 +113,13 @@ dependencies {
 
     //Sweet Alert
     implementation "com.github.f0ris.sweetalert:library:1.6.2"
+
+    //Escaner
+    implementation 'com.google.zxing:core:3.4.0'
+    implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+
+    // Paging Compose
+    implementation "com.google.accompanist:accompanist-pager:0.13.0"
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.13.0"
+
 }
