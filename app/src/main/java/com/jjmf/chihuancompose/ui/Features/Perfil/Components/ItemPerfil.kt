@@ -21,6 +21,7 @@ import com.jjmf.chihuancompose.ui.theme.ColorP2
 fun ItemPerfil(
     icon: ImageVector,
     texto: String,
+    click:()->Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -37,7 +38,7 @@ fun ItemPerfil(
                 color = ColorP1,
                 modifier = Modifier.weight(1f)
             )
-            IconButton(onClick = {}) {
+            IconButton(onClick = click) {
                 Icon(
                     imageVector = Icons.Default.ArrowRight,
                     contentDescription = null,

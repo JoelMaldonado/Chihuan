@@ -10,6 +10,7 @@ import com.jjmf.chihuancompose.Data.Model.Deuda
 import com.jjmf.chihuancompose.ui.Features.Detalle.DetalleScreen
 import com.jjmf.chihuancompose.ui.Features.Menu.MenuScreen
 import com.jjmf.chihuancompose.ui.Features.Perfil.PerfilScreen
+import com.jjmf.chihuancompose.ui.Features.Registro.RegistroScreen
 import com.jjmf.chihuancompose.ui.Screens.BienvenidaScreen
 import com.jjmf.chihuancompose.ui.Screens.Login.LoginScreen
 import com.jjmf.chihuancompose.ui.Screens.SplashScreen
@@ -48,6 +49,17 @@ fun NavegacionesScreen(
                 toMenu = {
                     navController.popBackStack()
                     navController.navigate(Rutas.Menu.route)
+                },
+                toRegistro = {
+                    navController.navigate(Rutas.Registro.route)
+                }
+            )
+        }
+        composable(Rutas.Registro.route){
+            RegistroScreen(
+                toMenu = {
+                    navController.popBackStack()
+                    navController.navigate(Rutas.Menu.route)
                 }
             )
         }
@@ -72,6 +84,12 @@ fun NavegacionesScreen(
             PerfilScreen(
                 back = {
                     navController.popBackStack()
+                },
+                signOut = {
+                    navController.backQueue.clear()
+                    navController.popBackStack()
+                    navController.navigate(Rutas.Login.route)
+                    prefs.clearUser()
                 }
             )
         }

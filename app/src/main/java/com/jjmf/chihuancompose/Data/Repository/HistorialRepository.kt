@@ -5,6 +5,8 @@ import com.google.firebase.firestore.CollectionReference
 import com.jjmf.chihuancompose.Data.Module.FirebaseModule
 import com.jjmf.chihuancompose.Data.Model.Deuda
 import com.jjmf.chihuancompose.Data.Model.Historial
+import com.jjmf.chihuancompose.Data.Model.getFecha
+import com.jjmf.chihuancompose.Util.getFecha
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

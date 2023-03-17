@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jjmf.chihuancompose.Data.Model.Historial
+import com.jjmf.chihuancompose.Data.Model.getFecha
 import com.jjmf.chihuancompose.Util.invertir
 import com.jjmf.chihuancompose.Util.show
 import com.jjmf.chihuancompose.ui.Features.Detalle.DetalleViewModel
@@ -39,7 +40,7 @@ fun ItemHistorial(
 
     var anim by remember { mutableStateOf(false) }
 
-    val time = historial.getFecha(historial.fecha!!)
+    val time = historial.fecha.getFecha()
 
     val context = LocalContext.current
 

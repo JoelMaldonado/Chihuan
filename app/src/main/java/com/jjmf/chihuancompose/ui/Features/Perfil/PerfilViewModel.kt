@@ -1,11 +1,11 @@
 package com.jjmf.chihuancompose.ui.Features.Perfil
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jjmf.chihuancompose.Application.BaseApp
+import com.jjmf.chihuancompose.Application.BaseApp.Companion.prefs
 import com.jjmf.chihuancompose.Data.Repository.UsuarioRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,8 +21,7 @@ class PerfilViewModel @Inject constructor(
 
     fun getUsuario() {
         viewModelScope.launch(Dispatchers.IO){
-            val user =  repository.getListUsuarios().find { it.id == BaseApp.prefs.getId() }
-            state = state.copy(usuario = user)
+            state = state.copy(usuario = prefs.getUser())
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.jjmf.chihuancompose.Data.Repository
 
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.ktx.toObject
 import com.jjmf.chihuancompose.Application.BaseApp.Companion.prefs
 import com.jjmf.chihuancompose.Data.Model.Usuario
 import com.jjmf.chihuancompose.Data.Module.FirebaseModule
@@ -15,7 +14,7 @@ interface UsuarioRepository {
 
     suspend fun getList(): Flow<List<Usuario>>
     suspend fun getListUsuarios(): List<Usuario>
-    suspend fun insert(usuario: Usuario)
+    suspend fun insert(usuario: Usuario): Boolean
 }
 
 class UsuarioRepositoryImpl @Inject constructor(
@@ -43,8 +42,14 @@ class UsuarioRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun insert(usuario: Usuario) {
-        prefs.saveID(fb.add(usuario).await().id)
+    override suspend fun insert(usuario: Usuario): Boolean {
+        return if (usuario.correo !in getListUsuarios().map { it.correo }) {
+            prefs.saveUser(
+                usuario.copy(id = fb.add(usuario).await().id)
+            )
+            true
+        } else false
+
     }
 
 }

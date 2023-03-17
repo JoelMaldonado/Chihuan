@@ -1,6 +1,8 @@
 package com.jjmf.chihuancompose.Application
 
 import android.content.Context
+import com.google.gson.Gson
+import com.jjmf.chihuancompose.Data.Model.Usuario
 
 class Preferencias(context: Context) {
 
@@ -9,19 +11,36 @@ class Preferencias(context: Context) {
     private val KEY_TOKEN = "KEY_TOKEN"
     private val KEY_BIENVENIDA = "KEY_BIENVENIDA"
     private val KEY_ID = "KEY_ID"
-    private val KEY_IMG = "KEY_IMG"
-    private val KEY_BOOL = "KEY_BOOL"
+    private val KEY_RECUERDAME = "KEY_RECUERDAME"
+    private val KEY_LOGIN_CORREO = "KEY_LOGIN_CORREO"
+    private val KEY_LOGIN_PASS = "KEY_LOGIN_PASS"
 
     private val storage = context.getSharedPreferences(SHARED_NAME, 0)
 
 
-    fun saveID(id: String) {
-        storage.edit().putString(KEY_ID, id).apply()
+    fun saveLoginCorreo(id: String) =storage.edit().putString(KEY_LOGIN_CORREO, id).apply()
+    fun getLoginCorreo() = storage.getString(KEY_LOGIN_CORREO, "") ?: "No se encontro"
+
+    fun saveLoginPass(id: String) =storage.edit().putString(KEY_LOGIN_PASS, id).apply()
+    fun getLoginPass() = storage.getString(KEY_LOGIN_PASS, "") ?: ""
+    fun saveToken(token: String) = storage.edit().putString(KEY_TOKEN, token).apply()
+    fun getToken() = storage.getString(KEY_TOKEN, "") ?: "No se encontro"
+    fun saveBienvenida(bool: Boolean) = storage.edit().putBoolean(KEY_BIENVENIDA, bool).apply()
+    fun getBienvenida() = storage.getBoolean(KEY_BIENVENIDA, false)
+    fun saveRecuerdame(bool: Boolean) = storage.edit().putBoolean(KEY_RECUERDAME, bool).apply()
+    fun getRecuerdame() = storage.getBoolean(KEY_RECUERDAME, false)
+
+    private val KEY_USER = "KEY_USER"
+    fun saveUser(user: Usuario) = storage.edit().putString(KEY_USER, Gson().toJson(user)).apply()
+
+    fun clearUser() {
+        storage.edit().remove(KEY_USER).apply()
+    }
+    fun getUser(): Usuario? {
+        val user = storage.getString(KEY_USER, null)
+        return if (user != null) {
+            Gson().fromJson(user, Usuario::class.java)
+        } else null
     }
 
-    fun getId() = storage.getString(KEY_ID, "") ?: "No se encontro"
-    fun saveToken(token:String) = storage.edit().putString(KEY_TOKEN, token).apply()
-    fun getToken() = storage.getString(KEY_TOKEN, "") ?: "No se encontro"
-    fun saveBienvenida(bool:Boolean) = storage.edit().putBoolean(KEY_BIENVENIDA, bool).apply()
-    fun getBienvenida() = storage.getBoolean(KEY_BIENVENIDA, false)
 }

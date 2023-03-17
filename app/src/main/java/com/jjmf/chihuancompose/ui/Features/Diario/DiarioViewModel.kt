@@ -1,9 +1,8 @@
 package com.jjmf.chihuancompose.ui.Features.Diario
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
@@ -12,16 +11,9 @@ import com.google.firebase.Timestamp
 import com.jjmf.chihuancompose.Application.BaseApp.Companion.prefs
 import com.jjmf.chihuancompose.Data.Model.Diario
 import com.jjmf.chihuancompose.Data.Repository.DiarioRepository
-import com.jjmf.chihuancompose.Util.getDia
-import com.jjmf.chihuancompose.Util.getFecha
-import com.jjmf.chihuancompose.Util.getFecha2
-import com.jjmf.chihuancompose.Util.getHora
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +30,7 @@ class DiarioViewModel @Inject constructor(
             val diario = Diario(
                 monto = -monto.text.toDouble(),
                 descrip = descrip,
-                idUsuario = prefs.getId(),
+                idUsuario = prefs.getUser()?.id,
                 time = Timestamp.now()
             )
             repository.insert(diario)
@@ -51,7 +43,7 @@ class DiarioViewModel @Inject constructor(
             val diario = Diario(
                 monto = monto.text.toDouble(),
                 descrip = descrip,
-                idUsuario = prefs.getId(),
+                idUsuario = prefs.getUser()?.id,
                 time = Timestamp.now(),
             )
             repository.insert(diario)
@@ -67,7 +59,7 @@ class DiarioViewModel @Inject constructor(
 
     fun getList() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getListByDia(prefs.getId()).collect {
+            repository.getListByDia(prefs.getUser()?.id!!).collect {
                 state = state.copy(
                     listado = it.sortedByDescending { it.time },
                     contador = it.sumOf { it.monto ?: 0.0 }

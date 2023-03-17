@@ -5,7 +5,9 @@ import com.jjmf.chihuancompose.Application.BaseApp
 import com.jjmf.chihuancompose.Data.Model.Deuda
 import com.jjmf.chihuancompose.Data.Model.Diario
 import com.jjmf.chihuancompose.Data.Model.Fecha
+import com.jjmf.chihuancompose.Data.Model.getFecha
 import com.jjmf.chihuancompose.Data.Module.FirebaseModule
+import com.jjmf.chihuancompose.Util.getFecha
 import com.jjmf.chihuancompose.Util.getFecha2
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -50,7 +52,10 @@ class DiarioRepositoryImpl @Inject constructor(
             for (i in sna!!.documents) {
                 val product = i.toObject(Diario::class.java)
                 product!!.id = i.id
-                lista.add(product)
+                val fecha = product.time.getFecha()
+                if ("${fecha.mes}/${fecha.anio}" == getFecha("MM/yyyy")){
+                    lista.add(product)
+                }
             }
             trySend(lista).isSuccess
         }

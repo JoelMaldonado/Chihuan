@@ -10,7 +10,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Money
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,10 +38,6 @@ fun MenuScreen(
     finish:()->Unit,
     viewModel: MenuViewModel = hiltViewModel(),
 ) {
-
-    LaunchedEffect(key1 = true) {
-        viewModel.getUsuario()
-    }
     val navMenuController = rememberNavController()
 
     val context = LocalContext.current

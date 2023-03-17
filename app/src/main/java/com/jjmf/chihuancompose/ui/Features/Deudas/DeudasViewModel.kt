@@ -1,8 +1,8 @@
 package com.jjmf.chihuancompose.ui.Features.Deudas
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
@@ -71,7 +71,7 @@ class DeudasViewModel @Inject constructor(
             val deuda = Deuda(
                 titulo = titulo,
                 fecha = Timestamp.now(),
-                idUsuario = prefs.getId(),
+                idUsuario = prefs.getUser()?.id,
                 doble = false
             )
 
@@ -93,7 +93,7 @@ class DeudasViewModel @Inject constructor(
             val numero = monto.text.toDouble().redondear()
             val deuda = Deuda(
                 fecha = Timestamp.now(),
-                idUsuario = prefs.getId(),
+                idUsuario = prefs.getUser()?.id,
                 idUsuario2 = idUsuario2,
                 doble = true
             )

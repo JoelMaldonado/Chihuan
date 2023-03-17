@@ -2,8 +2,8 @@ package com.jjmf.chihuancompose.Data.Repository
 
 import com.google.firebase.firestore.CollectionReference
 import com.jjmf.chihuancompose.Application.BaseApp.Companion.prefs
-import com.jjmf.chihuancompose.Data.Module.FirebaseModule
 import com.jjmf.chihuancompose.Data.Model.Deuda
+import com.jjmf.chihuancompose.Data.Module.FirebaseModule
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -29,9 +29,9 @@ class DeudaRepositoryImpl @Inject constructor(
                     for (i in sna!!.documents) {
                         val product = i.toObject(Deuda::class.java)
                         product!!.id = i.id
-                        if (product.idUsuario == prefs.getId()){
+                        if (product.idUsuario == prefs.getUser()?.id){
                             lista.add(product)
-                        }else if (product.idUsuario2 == prefs.getId()){
+                        }else if (product.idUsuario2 == prefs.getUser()?.id){
                             lista.add(product.copy(segundo = true))
                         }
                     }
