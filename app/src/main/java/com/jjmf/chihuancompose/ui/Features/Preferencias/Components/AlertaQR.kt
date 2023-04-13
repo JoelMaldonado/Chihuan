@@ -1,4 +1,4 @@
-package com.jjmf.chihuancompose.ui.Features.Perfil.Components
+package com.jjmf.chihuancompose.ui.Features.Preferencias.Components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -19,14 +19,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.zxing.BarcodeFormat
-import com.jjmf.chihuancompose.ui.Features.Perfil.PerfilViewModel
+import com.jjmf.chihuancompose.ui.Features.Preferencias.PreferenciaViewModel
 import com.jjmf.chihuancompose.ui.theme.ColorP2
 import com.journeyapps.barcodescanner.BarcodeEncoder
 
 
 @Composable
 fun AlertaQr(
-    viewModel: PerfilViewModel = hiltViewModel(),
+    viewModel: PreferenciaViewModel = hiltViewModel(),
 ) {
     Dialog(
         onDismissRequest = {

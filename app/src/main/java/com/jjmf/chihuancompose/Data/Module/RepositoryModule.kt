@@ -1,10 +1,6 @@
 package com.jjmf.chihuancompose.Data.Module
 
 import com.jjmf.chihuancompose.Data.Repository.*
-import com.jjmf.chihuancompose.Data.Repository.HistorialRepository
-import com.jjmf.chihuancompose.Data.Repository.HistorialRepositoryImpl
-import com.jjmf.chihuancompose.Data.Repository.UsuarioRepository
-import com.jjmf.chihuancompose.Data.Repository.UsuarioRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -22,6 +18,4 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun historialRepo(repo: HistorialRepositoryImpl): HistorialRepository
-    @Binds
-    abstract fun diarioRepo(repo: DiarioRepositoryImpl): DiarioRepository
 }

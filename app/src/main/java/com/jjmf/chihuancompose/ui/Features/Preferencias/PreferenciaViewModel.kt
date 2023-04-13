@@ -1,4 +1,4 @@
-package com.jjmf.chihuancompose.ui.Features.Perfil
+package com.jjmf.chihuancompose.ui.Features.Preferencias
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PerfilViewModel @Inject constructor(
+class PreferenciaViewModel @Inject constructor(
     private val repository: UsuarioRepository
 ) : ViewModel() {
 

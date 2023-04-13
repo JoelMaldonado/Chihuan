@@ -8,8 +8,9 @@ import androidx.navigation.compose.rememberNavController
 import com.jjmf.chihuancompose.Application.BaseApp.Companion.prefs
 import com.jjmf.chihuancompose.Data.Model.Deuda
 import com.jjmf.chihuancompose.ui.Features.Detalle.DetalleScreen
-import com.jjmf.chihuancompose.ui.Features.Menu.MenuScreen
-import com.jjmf.chihuancompose.ui.Features.Perfil.PerfilScreen
+import com.jjmf.chihuancompose.ui.Features.Deudas.DeudasScreen
+import com.jjmf.chihuancompose.ui.Features.Preferencias.PreferenciaScreen
+import com.jjmf.chihuancompose.ui.Features.Preferencias.Screens.Moneda.MonedaScreen
 import com.jjmf.chihuancompose.ui.Features.Registro.RegistroScreen
 import com.jjmf.chihuancompose.ui.Screens.BienvenidaScreen
 import com.jjmf.chihuancompose.ui.Screens.Login.LoginScreen
@@ -17,7 +18,7 @@ import com.jjmf.chihuancompose.ui.Screens.SplashScreen
 
 @Composable
 fun NavegacionesScreen(
-    activity: Activity
+    activity: Activity,
 ) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Rutas.Splash.route) {
@@ -25,7 +26,7 @@ fun NavegacionesScreen(
             SplashScreen(
                 toMenu = {
                     navController.popBackStack()
-                    navController.navigate(Rutas.Menu.route)
+                    navController.navigate(Rutas.Deudas.route)
                 },
                 toLogin = {
                     navController.popBackStack()
@@ -36,7 +37,7 @@ fun NavegacionesScreen(
                 }
             )
         }
-        composable(Rutas.Bienvenida.route){
+        composable(Rutas.Bienvenida.route) {
             BienvenidaScreen(
                 toLogin = {
                     navController.popBackStack()
@@ -48,23 +49,23 @@ fun NavegacionesScreen(
             LoginScreen(
                 toMenu = {
                     navController.popBackStack()
-                    navController.navigate(Rutas.Menu.route)
+                    navController.navigate(Rutas.Deudas.route)
                 },
                 toRegistro = {
                     navController.navigate(Rutas.Registro.route)
                 }
             )
         }
-        composable(Rutas.Registro.route){
+        composable(Rutas.Registro.route) {
             RegistroScreen(
                 toMenu = {
                     navController.popBackStack()
-                    navController.navigate(Rutas.Menu.route)
+                    navController.navigate(Rutas.Deudas.route)
                 }
             )
         }
-        composable(Rutas.Menu.route){
-            MenuScreen(
+        composable(Rutas.Deudas.route) {
+            DeudasScreen(
                 toDetalle = {
                     navController.currentBackStackEntry?.savedStateHandle?.set(
                         key = "deuda",
@@ -73,15 +74,12 @@ fun NavegacionesScreen(
                     navController.navigate(Rutas.Detalle.route)
                 },
                 toPerfil = {
-                    navController.navigate(Rutas.Perfil.route)
-                },
-                finish = {
-                    activity.finish()
+                    navController.navigate(Rutas.Preferencia.route)
                 }
             )
         }
-        composable(Rutas.Perfil.route){
-            PerfilScreen(
+        composable(Rutas.Preferencia.route) {
+            PreferenciaScreen(
                 back = {
                     navController.popBackStack()
                 },
@@ -90,12 +88,24 @@ fun NavegacionesScreen(
                     navController.popBackStack()
                     navController.navigate(Rutas.Login.route)
                     prefs.clearUser()
+                },
+                toMoneda = {
+                    navController.navigate(Rutas.Preferencia.Moneda.route)
                 }
             )
         }
-        composable(Rutas.Detalle.route){
+
+        composable(Rutas.Preferencia.Moneda.route){
+            MonedaScreen(
+                back = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Rutas.Detalle.route) {
             val result = navController.previousBackStackEntry?.savedStateHandle?.get<Deuda>("deuda")
-            if (result!=null){
+            if (result != null) {
                 DetalleScreen(
                     result,
                     back = {

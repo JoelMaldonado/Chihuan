@@ -1,4 +1,4 @@
-package com.jjmf.chihuancompose.ui.Features.Perfil
+package com.jjmf.chihuancompose.ui.Features.Preferencias
 
 import com.jjmf.chihuancompose.Data.Model.Usuario
 

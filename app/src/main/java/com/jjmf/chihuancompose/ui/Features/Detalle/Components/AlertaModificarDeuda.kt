@@ -24,8 +24,10 @@ import com.jjmf.chihuancompose.Util.invertir
 import com.jjmf.chihuancompose.Util.redondear
 import com.jjmf.chihuancompose.Util.toNumero
 import com.jjmf.chihuancompose.ui.Features.Detalle.DetalleViewModel
-import com.jjmf.chihuancompose.ui.Features.Deudas.Components.*
-import com.jjmf.chihuancompose.ui.Features.Diario.Components.CajaDinero
+import com.jjmf.chihuancompose.ui.Features.Deudas.Components.CajaDescrip
+import com.jjmf.chihuancompose.ui.Features.Deudas.Components.Checks
+import com.jjmf.chihuancompose.ui.Features.Deudas.Components.TituloAgregarDeuda
+import com.jjmf.chihuancompose.ui.components.CajaDinero
 import com.jjmf.chihuancompose.ui.theme.ColorP2
 
 @Composable

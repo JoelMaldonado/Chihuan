@@ -12,11 +12,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.Timestamp
+import com.jjmf.chihuancompose.Application.BaseApp.Companion.prefs
 import com.jjmf.chihuancompose.Data.Model.Deuda
 import com.jjmf.chihuancompose.R
 import com.jjmf.chihuancompose.Util.getFecha
 import com.jjmf.chihuancompose.Util.invertir
-import com.jjmf.chihuancompose.Util.redondear
 import com.jjmf.chihuancompose.Util.toFecha
 import com.jjmf.chihuancompose.ui.Features.Deudas.DeudasViewModel
 import com.jjmf.chihuancompose.ui.Features.Deudas.primero
@@ -38,7 +38,7 @@ fun DeudaCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(10.dp),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(10.dp),
         elevation = 5.dp,
         onClick = toDetalle,
         backgroundColor = Color.White
@@ -62,7 +62,6 @@ fun DeudaCard(
                 }else{
                     Nombre(deuda.titulo)
                 }
-                Fecha(deuda.fecha)
                 Spacer(modifier = Modifier.height(5.dp))
                 if (deuda.segundo){
                     Monto(deuda = deuda, modifier = Modifier.align(Alignment.End), neg = true)
@@ -78,8 +77,8 @@ fun DeudaCard(
 private fun Nombre(nombre: String?) {
     Text(
         text = nombre.toString(),
-        color = ColorP1,
-        fontWeight = FontWeight.Bold
+        color = Color.Black,
+        fontWeight = FontWeight.Medium
     )
 }
 
@@ -93,12 +92,22 @@ private fun Monto(
     val total = viewModel.getTotal(deuda.id ?: "").collectAsState(initial = 0.0).value
     val num = if (neg) total.invertir() else total
 
-    Text(
-        text = " S/${num}",
-        modifier = modifier,
-        fontWeight = FontWeight.SemiBold,
-        color = if (num < 0) ColorRed else ColorP2
-    )
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+
+        Text(text = if (num<0) "Debes" else "Te debe")
+
+        val symbol = prefs.getMoneda()?.symbol ?: "$"
+        Text(
+            text = " $symbol $num",
+            modifier = modifier,
+            fontWeight = FontWeight.SemiBold,
+            color = if (num < 0) ColorRed else ColorP2
+        )
+    }
 }
 
 @Composable

@@ -7,10 +7,9 @@ sealed class Rutas(val route:String){
     object Splash : Rutas("Splash")
     object Login : Rutas("Login")
     object Registro : Rutas("Registro")
-    object Menu : Rutas("Menu")
-    object Perfil : Rutas("Perfil")
+    object Preferencia : Rutas("Perfil"){
+        object Moneda:Rutas("Moneda")
+    }
     object Deudas : Rutas("Deudas")
-    object Diario : Rutas("Diario")
-    object Reporte : Rutas("Reporte")
     object Detalle:Rutas("Detalle")
 }

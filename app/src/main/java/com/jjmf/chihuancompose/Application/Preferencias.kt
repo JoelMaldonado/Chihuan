@@ -2,6 +2,7 @@ package com.jjmf.chihuancompose.Application
 
 import android.content.Context
 import com.google.gson.Gson
+import com.jjmf.chihuancompose.Data.Model.Moneda
 import com.jjmf.chihuancompose.Data.Model.Usuario
 
 class Preferencias(context: Context) {
@@ -43,4 +44,27 @@ class Preferencias(context: Context) {
         } else null
     }
 
+    private val KEY_MONEDA = "KEY_MONEDA"
+    fun saveMoneda(moneda:Moneda) {
+        val gson = Gson().toJson(moneda)
+        save(KEY_MONEDA, gson)
+    }
+    fun getMoneda() : Moneda?{
+        val moneda = get(KEY_MONEDA)
+        return try {
+            if (moneda!=null){
+                val gson = Gson().fromJson(moneda, Moneda::class.java)
+                gson
+            }else null
+        }catch (e:Exception){
+            null
+        }
+    }
+
+    private fun save(key:String, valor:String){
+        storage.edit().putString(key, valor).apply()
+    }
+    private fun get(key: String): String? {
+        return storage.getString(key, null)
+    }
 }

@@ -32,11 +32,6 @@ class FirebaseModule {
     @Singleton
     fun provideHistorial() = provideFirebase().collection(FB_HISTORIAL)
 
-    @DiarioCollection
-    @Provides
-    @Singleton
-    fun provideDiario() = provideFirebase().collection(FB_DIARIO)
-
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class UsuarioCollection
@@ -48,9 +43,5 @@ class FirebaseModule {
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class HistorialCollection
-
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class DiarioCollection
 
 }
