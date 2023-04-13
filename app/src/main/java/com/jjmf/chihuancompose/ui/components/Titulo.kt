@@ -29,6 +29,7 @@ fun Titulo(
     iconRight: ImageVector? = null,
     clickRight: (() -> Unit)? = null,
     space:Dp = 0.dp,
+    alignment: Alignment.Horizontal = Alignment.Start,
     content: @Composable ColumnScope.()->Unit
 ) {
 
@@ -36,7 +37,6 @@ fun Titulo(
         modifier = Modifier
             .fillMaxSize()
             .background(ColorP2),
-        verticalArrangement = Arrangement.spacedBy(space)
     ) {
         Box(
             modifier = Modifier.fillMaxWidth()
@@ -81,7 +81,9 @@ fun Titulo(
                 .clip(RoundedCornerShape(topStart = 30.dp))
                 .background(if (isSystemInDarkTheme()) ColorP1 else Color.White)
                 .padding(10.dp),
-            content = content
+            content = content,
+            verticalArrangement = Arrangement.spacedBy(space),
+            horizontalAlignment = alignment
         )
     }
 }

@@ -12,8 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.jjmf.chihuancompose.R
 import com.jjmf.chihuancompose.ui.theme.ColorP1
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -42,7 +44,7 @@ fun DeudaCardAgregar(
                 modifier = Modifier.size(50.dp),
                 tint = ColorP1
             )
-            Text(text = "Agregar Deuda", color = ColorP1, fontWeight = FontWeight.Bold)
+            Text(text = stringResource(R.string.agregar_deuda), color = ColorP1, fontWeight = FontWeight.Bold)
         }
     }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Chihuan</string>
+    <string name="title_deudas">Debts</string>
+    <string name="agregar_deuda">Add Debt</string>
+    <string name="title_preferencias">Preferences</string>
+    <string name="pref_moneda">Currency</string>
+    <string name="pref_idioma">Language</string>
+    <string name="pref_sugerencia">Suggestion</string>
+    <string name="pref_califica">Rate this app</string>
+    <string name="pref_contactar">Contact the developer</string>
+    <string name="pref_version">Version</string>
+    <string name="pref_cerrar_sesion">Sign out</string>
+    <string name="espaniol">Spanish</string>
+    <string name="ingles">English</string>
+    <string name="content_qr">Share this QR to share \n a debt with a friend</string>
+</resources>

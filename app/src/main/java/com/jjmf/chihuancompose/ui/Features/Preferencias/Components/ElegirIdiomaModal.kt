@@ -11,16 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jjmf.chihuancompose.Application.BaseApp.Companion.prefs
+import com.jjmf.chihuancompose.Util.setLocale
 import com.jjmf.chihuancompose.ui.theme.ColorP1
 import com.jjmf.chihuancompose.ui.theme.ColorP3
 
 @Composable
 fun ElegirIdiomaModal(
-    click:()->Unit
+    click: () -> Unit,
 ) {
+
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,19 +41,38 @@ fun ElegirIdiomaModal(
         )
 
         Row(
-            modifier = Modifier.fillMaxWidth().clickable { click() }.padding(5.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    prefs.saveIdioma("es")
+                    setLocale(context, prefs.getIdioma())
+                    click()
+                }
+                .padding(5.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(text = "Español", fontWeight = FontWeight.Medium)
-            Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = ColorP1)
+            if (prefs.getIdioma() == "es") {
+                Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = ColorP1)
+            }
         }
         Row(
-            modifier = Modifier.fillMaxWidth().clickable { click() }.padding(5.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    prefs.saveIdioma("en")
+                    setLocale(context, prefs.getIdioma())
+                    click()
+                }
+                .padding(5.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(text = "Ingles", fontWeight = FontWeight.Medium)
+            if (prefs.getIdioma() == "en") {
+                Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = ColorP1)
+            }
         }
 
     }

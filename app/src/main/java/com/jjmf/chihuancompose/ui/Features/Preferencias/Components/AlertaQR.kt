@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -19,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.zxing.BarcodeFormat
+import com.jjmf.chihuancompose.R
 import com.jjmf.chihuancompose.ui.Features.Preferencias.PreferenciaViewModel
 import com.jjmf.chihuancompose.ui.theme.ColorP2
 import com.journeyapps.barcodescanner.BarcodeEncoder
@@ -28,6 +31,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 fun AlertaQr(
     viewModel: PreferenciaViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     Dialog(
         onDismissRequest = {
             viewModel.state = viewModel.state.copy(alertaQr = false)
@@ -59,16 +63,28 @@ fun AlertaQr(
                 Text(
                     text = viewModel.state.usuario?.nombres.toString() + " " + viewModel.state.usuario?.apellido.toString(),
                     color = ColorP2,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.SemiBold,
                     fontSize = 22.sp
                 )
                 Text(
-                    text = "Comparte este QR para compartir \n una deuda con un amigo",
-                    color = ColorP2,
-                    fontWeight = FontWeight.SemiBold,
+                    text = stringResource(id = R.string.content_qr),
+                    color = Color.Black,
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp
-                )
+                )/*
+                IconButton(
+                    onClick = {
+                        val intent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.jjmf.chihuancompose")
+                        }
+                        val shareIntent = Intent.createChooser(intent, null)
+                        context.startActivity(shareIntent)
+                    }
+                ) {
+                    Icon(imageVector = Icons.Default.Share, contentDescription = null, tint = ColorS1)
+                }*/
             }
         }
     }

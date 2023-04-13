@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.jjmf.chihuancompose.Data.Model.Moneda
 import com.jjmf.chihuancompose.Data.Model.Usuario
+import java.util.*
 
 class Preferencias(context: Context) {
 
@@ -61,10 +62,20 @@ class Preferencias(context: Context) {
         }
     }
 
+    private val KEY_IDIOMA = "KEY_IDIOMA"
+
+    fun saveIdioma(idioma: String) = save(KEY_IDIOMA, idioma)
+    fun getIdioma() = get(KEY_IDIOMA) ?: when(Locale.getDefault().language){
+        "es" -> "es"
+        "en" -> "en"
+        else -> "en"
+    }
+
     private fun save(key:String, valor:String){
         storage.edit().putString(key, valor).apply()
     }
     private fun get(key: String): String? {
         return storage.getString(key, null)
     }
+
 }

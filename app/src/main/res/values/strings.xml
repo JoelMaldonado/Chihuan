@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Chihuan</string>
+    <string name="title_deudas">Deudas</string>
+    <string name="agregar_deuda">Agregar Deuda</string>
+    <string name="title_preferencias">Prefencias</string>
+    <string name="pref_moneda">Moneda</string>
+    <string name="pref_idioma">Idioma</string>
+    <string name="pref_sugerencia">Sugerencia</string>
+    <string name="pref_califica">Califica esta aplicación</string>
+    <string name="pref_contactar">Contactar con el desarrollador</string>
+    <string name="pref_version">Version</string>
+    <string name="pref_cerrar_sesion">Cerrar Sesión</string>
+    <string name="espaniol">Español</string>
+    <string name="ingles">Ingles</string>
+
+    <string name="content_qr">Comparte este QR para compartir \n una deuda con un amigo</string>
 </resources>

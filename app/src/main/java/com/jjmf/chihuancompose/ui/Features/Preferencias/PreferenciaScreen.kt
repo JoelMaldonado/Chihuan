@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,7 +28,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog
 import coil.compose.AsyncImage
 import com.jjmf.chihuancompose.Application.BaseApp.Companion.prefs
 import com.jjmf.chihuancompose.R
-import com.jjmf.chihuancompose.Util.show
+import com.jjmf.chihuancompose.Util.version
 import com.jjmf.chihuancompose.ui.Features.Preferencias.Components.AlertaQr
 import com.jjmf.chihuancompose.ui.Features.Preferencias.Components.ElegirIdiomaModal
 import com.jjmf.chihuancompose.ui.Features.Preferencias.Components.ItemPerfil
@@ -41,8 +42,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun PreferenciaScreen(
     back: () -> Unit,
+    refresh: () -> Unit,
     signOut: () -> Unit,
     toMoneda: () -> Unit,
+    toSugerencia: () -> Unit,
     viewModel: PreferenciaViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(key1 = true) {
@@ -63,6 +66,7 @@ fun PreferenciaScreen(
         sheetContent = {
             ElegirIdiomaModal(
                 click = {
+                    refresh()
                     coroutine.launch {
                         bottomState.bottomSheetState.collapse()
                     }
@@ -73,10 +77,10 @@ fun PreferenciaScreen(
         sheetShape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
     ) {
         Titulo(
-            title = "Prefencias",
+            title = stringResource(R.string.title_preferencias),
             iconLeft = Icons.Default.ArrowBack,
             clickLeft = back,
-            space = 10.dp
+            space = 5.dp
         ) {
 
             val user = prefs.getUser()
@@ -123,35 +127,36 @@ fun PreferenciaScreen(
             Divider(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 20.dp),
+                    .padding(vertical = 10.dp),
                 color = Color.Gray.copy(0.1f)
             )
 
             ItemPerfil(
                 icon = Icons.Default.Money,
-                texto = "Moneda",
+                texto = stringResource(R.string.pref_moneda),
                 click = toMoneda,
                 content = prefs.getMoneda()?.code ?: "USD"
             )
 
             ItemPerfil(
                 icon = Icons.Default.Language,
-                texto = "Idioma",
+                texto = stringResource(R.string.pref_idioma),
                 click = {
                     coroutine.launch {
                         bottomState.bottomSheetState.expand()
                     }
                 },
-                content = "Español"
+                content = if (prefs.getIdioma() == "es") stringResource(R.string.espaniol)
+                else stringResource(R.string.ingles)
             )
             ItemPerfil(
                 icon = Icons.Default.SettingsSuggest,
-                texto = "Sugerencia",
-                click = {}
+                texto = stringResource(R.string.pref_sugerencia),
+                click = toSugerencia
             )
             ItemPerfil(
                 icon = Icons.Default.Star,
-                texto = "Califica esta aplicación",
+                texto = stringResource(R.string.pref_califica),
                 click = {
                     val uri =
                         Uri.parse("https://play.google.com/store/apps/details?id=com.jjmf.chihuancompose")
@@ -160,7 +165,7 @@ fun PreferenciaScreen(
             )
             ItemPerfil(
                 icon = Icons.Default.Person,
-                texto = "Contactar con el desarrollador",
+                texto = stringResource(R.string.pref_contactar),
                 click = {
                     val uri = Uri.parse("https://api.whatsapp.com/send?phone=51936416623")
                     context.startActivity(Intent(Intent.ACTION_VIEW, uri))
@@ -168,15 +173,14 @@ fun PreferenciaScreen(
             )
             ItemPerfil(
                 icon = Icons.Default.ConfirmationNumber,
-                texto = "Version",
-                descrip = "1.0.0",
-                click = {
-                    context.show("Te encuentras en la versión 1.0.0 de la app chihuan")
-                }
+                texto = stringResource(R.string.pref_version),
+                descrip = version,
+                click = {},
+                isClick = false
             )
             ItemPerfil(
                 icon = Icons.Default.Logout,
-                texto = "Cerrar Sesión",
+                texto = stringResource(R.string.pref_cerrar_sesion),
                 click = {
                     cerrarSesion(
                         context = context,

@@ -8,9 +8,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jjmf.chihuancompose.Data.Model.Deuda
+import com.jjmf.chihuancompose.R
 import com.jjmf.chihuancompose.ui.Features.Deudas.Components.AgregarDeudaAlerta
 import com.jjmf.chihuancompose.ui.Features.Deudas.Components.DeudaCardAgregar
 import com.jjmf.chihuancompose.ui.Features.Deudas.Components.SinDeuda
@@ -29,7 +31,7 @@ fun DeudasScreen(
     }
 
     Titulo(
-        title = "Deudas",
+        title = stringResource(R.string.title_deudas),
         iconRight = Icons.Default.Settings,
         clickRight = toPerfil
     ) {

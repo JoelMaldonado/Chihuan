@@ -25,12 +25,13 @@ fun ItemPerfil(
     texto: String,
     content:String = "",
     descrip:String? = null,
-    click: () -> Unit
+    click: () -> Unit,
+    isClick:Boolean = true
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { click() }
+            .clickable(enabled = isClick) { click() }
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)

@@ -1,14 +1,13 @@
 package com.jjmf.chihuancompose.Util
 
 import android.content.Context
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import com.google.firebase.Timestamp
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.regex.Pattern
 
 
 fun Double.redondear(decimalesRequeridos: Int = 2): Double{
@@ -24,6 +23,17 @@ fun getFecha(pattern: String = "dd/MM/yyyy HH:mm") = SimpleDateFormat(pattern, L
 
 fun Context.show(texto:String?){
     Toast.makeText(this, texto, Toast.LENGTH_SHORT).show()
+}
+
+fun setLocale(context: Context, language: String) {
+    context.resources.apply {
+        val locale = Locale(language)
+        val config = Configuration(configuration)
+        context.createConfigurationContext(configuration)
+        Locale.setDefault(locale)
+        config.setLocale(locale)
+        context.resources.updateConfiguration(config, displayMetrics)
+    }
 }
 
 fun toNumero(numString: String): TextFieldValue {

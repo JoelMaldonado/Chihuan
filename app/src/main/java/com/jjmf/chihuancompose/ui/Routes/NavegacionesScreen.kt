@@ -11,6 +11,7 @@ import com.jjmf.chihuancompose.ui.Features.Detalle.DetalleScreen
 import com.jjmf.chihuancompose.ui.Features.Deudas.DeudasScreen
 import com.jjmf.chihuancompose.ui.Features.Preferencias.PreferenciaScreen
 import com.jjmf.chihuancompose.ui.Features.Preferencias.Screens.Moneda.MonedaScreen
+import com.jjmf.chihuancompose.ui.Features.Preferencias.Screens.Sugerencias.SugerenciasScreen
 import com.jjmf.chihuancompose.ui.Features.Registro.RegistroScreen
 import com.jjmf.chihuancompose.ui.Screens.BienvenidaScreen
 import com.jjmf.chihuancompose.ui.Screens.Login.LoginScreen
@@ -83,6 +84,10 @@ fun NavegacionesScreen(
                 back = {
                     navController.popBackStack()
                 },
+                refresh = {
+                    navController.popBackStack()
+                    navController.navigate(Rutas.Preferencia.route)
+                },
                 signOut = {
                     navController.backQueue.clear()
                     navController.popBackStack()
@@ -91,12 +96,22 @@ fun NavegacionesScreen(
                 },
                 toMoneda = {
                     navController.navigate(Rutas.Preferencia.Moneda.route)
+                },
+                toSugerencia = {
+                    navController.navigate(Rutas.Preferencia.Sugerencia.route)
                 }
             )
         }
 
-        composable(Rutas.Preferencia.Moneda.route){
+        composable(Rutas.Preferencia.Moneda.route) {
             MonedaScreen(
+                back = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(Rutas.Preferencia.Sugerencia.route) {
+            SugerenciasScreen(
                 back = {
                     navController.popBackStack()
                 }
