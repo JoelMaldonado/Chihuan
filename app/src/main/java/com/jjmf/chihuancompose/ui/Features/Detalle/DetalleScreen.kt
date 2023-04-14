@@ -3,7 +3,10 @@ package com.jjmf.chihuancompose.ui.Features.Detalle
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.Snackbar
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -13,7 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.jjmf.chihuancompose.Data.Model.Deuda
 import com.jjmf.chihuancompose.ui.Features.Detalle.Components.AlertaEliminarDeuda
 import com.jjmf.chihuancompose.ui.Features.Detalle.Components.AlertaModificarDeuda
@@ -61,7 +68,9 @@ fun DetalleScreen(
             }
         }
 
-        if (viewModel.state.mantenimiento){
+        BannerAdView()
+
+        if (viewModel.state.mantenimiento) {
             Snackbar(
                 backgroundColor = ColorOrange,
                 modifier = Modifier.padding(20.dp)
@@ -106,5 +115,24 @@ fun DetalleScreen(
             }
         }
 
+
     }
+}
+
+@Composable
+fun BannerAdView() {
+    AndroidView(
+        modifier = Modifier
+            .padding(30.dp)
+            .fillMaxWidth()
+            .height(300.dp),
+        factory = { context ->
+            AdView(context).apply {
+                setAdSize(AdSize.MEDIUM_RECTANGLE)
+                // Add your adUnitID, this is for testing.
+                adUnitId = "ca-app-pub-3940256099942544/6300978111"
+                loadAd(AdRequest.Builder().build())
+            }
+        }
+    )
 }

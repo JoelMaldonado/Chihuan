@@ -1,5 +1,6 @@
 package com.jjmf.chihuancompose.ui.Features.Deudas
 
+import androidx.compose.material.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,6 +18,7 @@ import com.jjmf.chihuancompose.Data.Repository.HistorialRepository
 import com.jjmf.chihuancompose.Data.Repository.UsuarioRepository
 import com.jjmf.chihuancompose.Util.redondear
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -32,6 +34,15 @@ class DeudasViewModel @Inject constructor(
 
 
     var state by mutableStateOf(DeudaState())
+
+    @OptIn(ExperimentalMaterialApi::class)
+    val bottomState = BottomSheetScaffoldState(
+        drawerState = DrawerState(DrawerValue.Closed),
+        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed),
+        snackbarHostState = SnackbarHostState()
+    )
+
+    lateinit var coroutine:CoroutineScope
 
     var titulo by mutableStateOf("")
     var idUsuario2 by mutableStateOf<String?>(null)
@@ -65,26 +76,54 @@ class DeudasViewModel @Inject constructor(
             }
         }
     }
+
+    var loader by mutableStateOf(false)
+    var error by mutableStateOf<String?>(null)
+
     fun insertar() {
         viewModelScope.launch(Dispatchers.IO) {
-            val numero = monto.text.toDouble().redondear()
-            val deuda = Deuda(
-                titulo = titulo,
-                fecha = Timestamp.now(),
-                idUsuario = prefs.getUser()?.id,
-                doble = false
-            )
+            try {
+                loader = true
+                val numero = monto.text.toDouble().redondear()
+                val deuda = Deuda(
+                    titulo = titulo,
+                    fecha = Timestamp.now(),
+                    idUsuario = prefs.getUser()?.id,
+                    doble = false
+                )
 
-            val idDeuda = repository.insert(deuda)
+                val idDeuda = repository.insert(deuda)
 
-            val historial = Historial(
-                fecha = Timestamp.now(),
-                dinero = if (bool) numero else -numero,
-                descripcion = descrip,
-                idDeuda = idDeuda
-            )
-            repoHistorial.insert(historial)
-            state = state.copy(alerta = false)
+                val historial = Historial(
+                    fecha = Timestamp.now(),
+                    dinero = if (bool) numero else -numero,
+                    descripcion = descrip,
+                    idDeuda = idDeuda
+                )
+                repoHistorial.insert(historial)
+                closeOrOpen(false)
+                titulo = ""
+                monto = monto.copy(text = "0")
+                descrip = ""
+            }catch (e:Exception){
+                loader = false
+                error = e.message
+            }finally {
+                loader = false
+            }
+        }
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    fun closeOrOpen(open:Boolean) {
+        if (open){
+            coroutine.launch {
+                bottomState.bottomSheetState.expand()
+            }
+        }else{
+            coroutine.launch {
+                bottomState.bottomSheetState.collapse()
+            }
         }
     }
 
@@ -107,7 +146,6 @@ class DeudasViewModel @Inject constructor(
                 idDeuda = idDeuda
             )
             repoHistorial.insert(historial)
-            state = state.copy(alerta = false)
         }
     }
 

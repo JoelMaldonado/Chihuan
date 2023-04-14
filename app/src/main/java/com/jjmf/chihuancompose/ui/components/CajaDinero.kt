@@ -1,15 +1,18 @@
 package com.jjmf.chihuancompose.ui.components
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import com.jjmf.chihuancompose.Application.BaseApp
 import com.jjmf.chihuancompose.Util.esNumero
 import com.jjmf.chihuancompose.ui.theme.ColorP2
 
@@ -21,6 +24,8 @@ fun CajaDinero(
     color: Color = ColorP2
 ) {
 
+    val symbol = BaseApp.prefs.getMoneda()?.symbol ?: "$"
+
     OutlinedTextField(
         value = valor,
         onValueChange = {
@@ -30,7 +35,7 @@ fun CajaDinero(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         leadingIcon = {
             Text(
-                text = "S/.",
+                text = symbol,
                 fontWeight = FontWeight.SemiBold,
                 color = color
             )
@@ -42,6 +47,7 @@ fun CajaDinero(
             unfocusedBorderColor = Color.Gray,
             unfocusedLabelColor = Color.Gray
         ),
-        textStyle = TextStyle(color = Color.Black)
+        textStyle = TextStyle(color = Color.Black),
+        modifier = Modifier.fillMaxWidth()
     )
 }

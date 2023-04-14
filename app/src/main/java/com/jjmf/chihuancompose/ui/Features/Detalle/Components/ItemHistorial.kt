@@ -3,7 +3,10 @@ package com.jjmf.chihuancompose.ui.Features.Detalle.Components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -19,17 +22,14 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.jjmf.chihuancompose.Application.BaseApp
 import com.jjmf.chihuancompose.Data.Model.Historial
 import com.jjmf.chihuancompose.Data.Model.getFecha
 import com.jjmf.chihuancompose.Util.invertir
-import com.jjmf.chihuancompose.Util.show
 import com.jjmf.chihuancompose.ui.Features.Detalle.DetalleViewModel
 import com.jjmf.chihuancompose.ui.theme.ColorP2
 import com.jjmf.chihuancompose.ui.theme.ColorRed
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun ItemHistorial(
@@ -67,16 +67,17 @@ fun ItemHistorial(
                     color = Color.Black,
                     modifier = Modifier.weight(2f)
                 )
+                val symbol = BaseApp.prefs.getMoneda()?.symbol ?: "$"
                 if (neg){
                     Text(
-                        text = "S/" + historial.dinero?.invertir().toString(),
+                        text = "$symbol ${historial.dinero?.invertir()}",
                         color = if ((historial.dinero?.invertir() ?: 0.0) < 0) ColorRed else ColorP2,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.weight(1f)
                     )
                 }else{
                     Text(
-                        text = "S/" + historial.dinero.toString(),
+                        text = "$symbol ${historial.dinero}",
                         color = if ((historial.dinero ?: 0.0) < 0) ColorRed else ColorP2,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.weight(1f)

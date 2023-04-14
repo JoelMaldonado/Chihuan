@@ -2,9 +2,6 @@ package com.jjmf.chihuancompose.ui.Features.Preferencias.Screens.Sugerencias
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -16,12 +13,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.jjmf.chihuancompose.ui.Features.Preferencias.Screens.Sugerencias.AgregarSugerencia.AgregarSugerenciaScreen
+import com.jjmf.chihuancompose.ui.Features.Preferencias.Screens.Sugerencias.HomeSugerencia.HomeSugerenciaScreen
+import com.jjmf.chihuancompose.ui.Routes.Rutas
 import com.jjmf.chihuancompose.ui.components.Titulo
 
 @Composable
 fun SugerenciasScreen(
-    back: () -> Unit,
+    back: () -> Unit
 ) {
+
+    val navController = rememberNavController()
 
     Titulo(
         title = "Tus sugerencias",
@@ -30,22 +35,22 @@ fun SugerenciasScreen(
         space = 10.dp,
         alignment = Alignment.CenterHorizontally
     ) {
-        Button(
-            onClick = {},
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp)
-        ) {
-            Text(text = "Añadir sugerencia")
+        NavHost(navController = navController, startDestination = Rutas.Preferencia.Sugerencia.Home.route){
+            composable(Rutas.Preferencia.Sugerencia.Home.route){
+                HomeSugerenciaScreen(
+                    toAgregarSugerencia = {
+                        navController.navigate(Rutas.Preferencia.Sugerencia.Agregar.route)
+                    }
+                )
+            }
+            composable(Rutas.Preferencia.Sugerencia.Agregar.route){
+                AgregarSugerenciaScreen(
+                    back = {
+                        navController.popBackStack()
+                    }
+                )
+            }
         }
-
-        Text(text = "Mi lista de sugerencias", modifier = Modifier.align(Alignment.Start))
-
-        Divider(
-            modifier = Modifier.fillMaxWidth(),
-            color = Color.Gray.copy(0.3f)
-        )
-
-        SinSugerencias()
     }
 }
 

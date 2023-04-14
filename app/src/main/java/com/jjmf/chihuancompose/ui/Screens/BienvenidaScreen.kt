@@ -2,6 +2,7 @@ package com.jjmf.chihuancompose.ui.Screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -32,18 +33,15 @@ fun BienvenidaScreen(
     val pager = rememberPagerState(pageCount = 3)
     val coroutine = rememberCoroutineScope()
 
-    val foto = when (pager.currentPage + 1) {
-        1 -> R.drawable.img_1
-        2 -> R.drawable.img_2
-        3 -> R.drawable.img_3
-        else -> null
-    }
+    val fotos = listOf(
+        R.drawable.img_1,
+        R.drawable.img_2,
+        R.drawable.img_3,
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
-            .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(50.dp),
+            .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -52,42 +50,60 @@ fun BienvenidaScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .padding(10.dp)
-        ) {
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                .padding(10.dp),
+
+            ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
                 AsyncImage(
-                    model = foto,
+                    model = fotos[it],
                     contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(300.dp)
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text(
+                    text = when (pager.currentPage + 1) {
+                        1 -> "Gestiona tu dinero"
+                        2 -> "Sabras cuanto dinero prestas o debes"
+                        3 -> "Comparte Deudas"
+                        else -> ""
+                    },
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black
+                )
+
+                Text(
+                    text = when (pager.currentPage + 1) {
+                        1 -> "El motivo de la app es para que puedas controlar mejor tu dinero"
+                        2 -> "Puedes prestar dinero a tus amigos o familiares y tenerlo todo guardado en la app"
+                        3 -> "Puedes compartir deudas con amigos, asi ambos pueden ver en tiempo real el dinero que se deben"
+                        else -> ""
+                    },
+                    textAlign = TextAlign.Center,
+                    color = Color.Gray.copy(0.8f)
                 )
             }
         }
+
         HorizontalPagerIndicator(pagerState = pager)
 
-        Text(
-            text = when (pager.currentPage + 1) {
-                1 -> "Chihuan te ayudara a controlar tus gastos"
-                2 -> "Sabras cuanto dinero prestas o debes"
-                3 -> "Comienza a administrar tu dinero"
-                else -> ""
-            },
-            fontSize = 18.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.SemiBold,
-            color = Color.Black
-        )
+
         Button(
             onClick = {
                 when (pager.currentPage + 1) {
                     1 -> {
                         coroutine.launch {
-                            pager.scrollToPage(1)
+                            pager.animateScrollToPage(1)
                         }
                     }
                     2 -> {
                         coroutine.launch {
-                            pager.scrollToPage(2)
+                            pager.animateScrollToPage(2)
                         }
                     }
                     3 -> {
@@ -95,12 +111,14 @@ fun BienvenidaScreen(
                         toLogin()
                     }
                 }
-            }
+            },
+            modifier = Modifier.fillMaxWidth().padding(30.dp),
+            shape = RoundedCornerShape(20.dp)
         ) {
             when (pager.currentPage + 1) {
                 1 -> Text(text = "Siguiente")
                 2 -> Text(text = "Siguiente")
-                3 -> Text(text = "Entendido")
+                3 -> Text(text = "Comenzemos")
             }
         }
 

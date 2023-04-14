@@ -27,8 +27,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.pedant.SweetAlert.SweetAlertDialog
 import coil.compose.AsyncImage
 import com.jjmf.chihuancompose.Application.BaseApp.Companion.prefs
+import com.jjmf.chihuancompose.BuildConfig
 import com.jjmf.chihuancompose.R
-import com.jjmf.chihuancompose.Util.version
 import com.jjmf.chihuancompose.ui.Features.Preferencias.Components.AlertaQr
 import com.jjmf.chihuancompose.ui.Features.Preferencias.Components.ElegirIdiomaModal
 import com.jjmf.chihuancompose.ui.Features.Preferencias.Components.ItemPerfil
@@ -174,7 +174,7 @@ fun PreferenciaScreen(
             ItemPerfil(
                 icon = Icons.Default.ConfirmationNumber,
                 texto = stringResource(R.string.pref_version),
-                descrip = version,
+                descrip = BuildConfig.VERSION_NAME,
                 click = {},
                 isClick = false
             )

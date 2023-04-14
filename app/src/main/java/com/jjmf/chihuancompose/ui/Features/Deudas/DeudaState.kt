@@ -6,6 +6,5 @@ import com.jjmf.chihuancompose.Data.Model.Usuario
 data class DeudaState(
     val cargando: Boolean = false,
     val listado: List<Deuda> = emptyList(),
-    val usuario: Usuario? = null,
-    val alerta: Boolean = false,
+    val usuario: Usuario? = null
 )

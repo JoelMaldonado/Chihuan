@@ -1,9 +1,11 @@
 package com.jjmf.chihuancompose.ui.Features.Deudas.Components
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,6 +29,7 @@ fun CajaTitulo(
             unfocusedLabelColor = Color.Gray
         ),
         textStyle = TextStyle(color = Color.Black),
-        enabled = !viewModel.isQr
+        enabled = !viewModel.isQr,
+        modifier = Modifier.fillMaxWidth()
     )
 }

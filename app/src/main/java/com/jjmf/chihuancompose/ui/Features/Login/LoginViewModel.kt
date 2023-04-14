@@ -18,9 +18,8 @@ class LoginViewModel @Inject constructor(
     private  val repository: UsuarioRepository
 ) : ViewModel(){
 
-    var check by mutableStateOf(prefs.getRecuerdame())
-    var correo by mutableStateOf(prefs.getLoginCorreo())
-    var clave by mutableStateOf(prefs.getLoginPass())
+    var correo by mutableStateOf("")
+    var clave by mutableStateOf("")
     var state by mutableStateOf(LoginState())
     fun insertar(usuario: Usuario) {
         viewModelScope.launch(Dispatchers.IO){
@@ -52,14 +51,6 @@ class LoginViewModel @Inject constructor(
             loader = true
             val user = repository.getListUsuarios().find { it.correo == correo && it.pass == clave }
             if (user!=null){
-                if (check){
-                    prefs.saveLoginCorreo(correo)
-                    prefs.saveLoginPass(clave)
-                }else{
-                    prefs.saveLoginCorreo("")
-                    prefs.saveLoginPass("")
-                }
-                prefs.saveRecuerdame(check)
                 toMenu = true
                 loader = false
                 prefs.saveUser(user)
