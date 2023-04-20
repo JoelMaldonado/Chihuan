@@ -1,11 +1,14 @@
 package com.jjmf.chihuancompose.ui.Routes
 
-import android.app.Activity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.auth.api.identity.Identity
 import com.jjmf.chihuancompose.Application.BaseApp.Companion.prefs
+import com.jjmf.chihuancompose.Core.GoogleAuthUiClient
 import com.jjmf.chihuancompose.Data.Model.Deuda
 import com.jjmf.chihuancompose.ui.Features.Detalle.DetalleScreen
 import com.jjmf.chihuancompose.ui.Features.Deudas.DeudasScreen
@@ -16,11 +19,12 @@ import com.jjmf.chihuancompose.ui.Features.Registro.RegistroScreen
 import com.jjmf.chihuancompose.ui.Screens.BienvenidaScreen
 import com.jjmf.chihuancompose.ui.Screens.Login.LoginScreen
 import com.jjmf.chihuancompose.ui.Screens.SplashScreen
+import kotlinx.coroutines.launch
 
 @Composable
-fun NavegacionesScreen(
-    activity: Activity,
-) {
+fun NavegacionesScreen() {
+    val context = LocalContext.current
+    val coroutine = rememberCoroutineScope()
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Rutas.Splash.route) {
         composable(Rutas.Splash.route) {
@@ -89,6 +93,12 @@ fun NavegacionesScreen(
                     navController.navigate(Rutas.Preferencia.route)
                 },
                 signOut = {
+                    coroutine.launch {
+                        GoogleAuthUiClient(
+                            context = context,
+                            oneTapClient = Identity.getSignInClient(context)
+                        ).signOut()
+                    }
                     navController.backQueue.clear()
                     navController.popBackStack()
                     navController.navigate(Rutas.Login.route)

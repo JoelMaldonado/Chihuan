@@ -32,7 +32,6 @@ class RegistroViewModel @Inject constructor(
             loader = true
             val usuario = Usuario(
                 nombres = nombre,
-                apellido = apellidos,
                 correo = correo,
                 pass = pass1
             )

@@ -23,7 +23,6 @@ class LoginViewModel @Inject constructor(
     var state by mutableStateOf(LoginState())
     fun insertar(usuario: Usuario) {
         viewModelScope.launch(Dispatchers.IO){
-
             if (!repository.insert(usuario)){
                 val user= repository.getListUsuarios().find { it.correo == usuario.correo }
                 if (user!=null){

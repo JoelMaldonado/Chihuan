@@ -70,7 +70,7 @@ class DeudasViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO){
             val usuario = repoUsuario.getListUsuarios().find { it.id == qr }
             if (usuario!=null){
-                titulo = usuario.nombres.primero() + " " + usuario.apellido.primero()
+                titulo = usuario.nombres.primero()
                 idUsuario2 = usuario.id
                 isQr = true
             }

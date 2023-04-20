@@ -2,10 +2,12 @@ package com.jjmf.chihuancompose.ui.Screens.Login
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,7 +18,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Login
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
@@ -34,18 +35,17 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
-import com.jjmf.chihuancompose.Data.Model.Usuario
+import com.jjmf.chihuancompose.Core.GoogleAuthUiClient
 import com.jjmf.chihuancompose.R
 import com.jjmf.chihuancompose.Util.show
 import com.jjmf.chihuancompose.ui.Features.Login.LoginViewModel
 import com.jjmf.chihuancompose.ui.theme.ColorP2
 import com.jjmf.chihuancompose.ui.theme.ColorS1
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("ResourceType")
@@ -55,9 +55,17 @@ fun LoginScreen(
     toRegistro: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
+
     val auth = FirebaseAuth.getInstance()
+
     val context = LocalContext.current
 
+    val coroutine = rememberCoroutineScope()
+
+    val googleAuthUiClient = GoogleAuthUiClient(
+        context = context,
+        oneTapClient = Identity.getSignInClient(context)
+    )
     if (viewModel.state.toMenu) {
         LaunchedEffect(key1 = true) {
             toMenu()
@@ -75,21 +83,21 @@ fun LoginScreen(
         viewModel.mensaje = null
     }
 
-    val res =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { re ->
-            val task = GoogleSignIn.getSignedInAccountFromIntent(re.data)
-            val account = task.getResult(ApiException::class.java)
-            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-            auth.signInWithCredential(credential).addOnSuccessListener {
-                val usuario = Usuario(
-                    nombres = account.givenName,
-                    apellido = account.familyName,
-                    foto = account.photoUrl.toString(),
-                    correo = account.email
-                )
-                viewModel.insertar(usuario)
+    val res = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = {
+            if (it.resultCode == RESULT_OK) {
+                coroutine.launch {
+                    val signInResult = googleAuthUiClient.signInWithIntent(
+                        intent = it.data ?: return@launch
+                    )
+                    if (signInResult.data != null) {
+                        viewModel.insertar(signInResult.data)
+                    }
+                }
             }
         }
+    )
 
     Column(
         modifier = Modifier
@@ -148,7 +156,9 @@ fun LoginScreen(
                 text = "¿Olvidaste tu contraseña?",
                 color = ColorS1,
                 fontWeight = FontWeight.Medium,
-                modifier = Modifier.align(Alignment.End).clickable { }
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .clickable { }
             )
             Spacer(modifier = Modifier.height(10.dp))
             Button(
@@ -190,7 +200,14 @@ fun LoginScreen(
             }
             Button(
                 onClick = {
-                    res.launch(signIn(context))
+                    coroutine.launch {
+                        val signInIntentSender = googleAuthUiClient.signIn()
+                        res.launch(
+                            IntentSenderRequest.Builder(
+                                signInIntentSender ?: return@launch
+                            ).build()
+                        )
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color.White
@@ -211,6 +228,8 @@ fun LoginScreen(
                     tint = Color.Black
                 )
             }
+
+            /*
             val context = LocalContext.current as Activity
             Button(
                 onClick = {
@@ -218,12 +237,14 @@ fun LoginScreen(
                         .setPhoneNumber("+51989076570")       // Phone number to verify
                         .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
                         .setActivity(context)
-                        .setCallbacks(object :PhoneAuthProvider.OnVerificationStateChangedCallbacks(){
+                        .setCallbacks(object :
+                            PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                             override fun onVerificationCompleted(p0: PhoneAuthCredential) {
                                 signInWithPhoneAuthCredential(p0, context)
                                 context.show("Si entro")
 
                             }
+
                             override fun onVerificationFailed(p0: FirebaseException) {
                                 context.show("No entro")
                             }
@@ -244,14 +265,17 @@ fun LoginScreen(
                     modifier = Modifier.size(30.dp),
                     tint = Color.Blue
                 )
-                Text(text = "Continua con tu teléfono", modifier = Modifier.padding(horizontal = 15.dp))
+                Text(
+                    text = "Continua con tu teléfono",
+                    modifier = Modifier.padding(horizontal = 15.dp)
+                )
                 Icon(
                     painter = painterResource(id = R.drawable.ic_right),
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
                     tint = Color.Black
                 )
-            }
+            }*/
             Spacer(modifier = Modifier.weight(1f))
             Row(
                 verticalAlignment = Alignment.CenterVertically

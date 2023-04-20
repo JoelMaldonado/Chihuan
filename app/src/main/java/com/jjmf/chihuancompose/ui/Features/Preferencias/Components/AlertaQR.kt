@@ -61,7 +61,7 @@ fun AlertaQr(
                     )
                 }
                 Text(
-                    text = viewModel.state.usuario?.nombres.toString() + " " + viewModel.state.usuario?.apellido.toString(),
+                    text = viewModel.state.usuario?.nombres.toString(),
                     color = ColorP2,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 22.sp

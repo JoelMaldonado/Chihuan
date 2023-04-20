@@ -54,10 +54,10 @@ fun DeudaCard(
                 if (deuda.doble){
                     if (deuda.segundo){
                         val nombre = viewModel.getUsuario(deuda.idUsuario).collectAsState(initial = null).value
-                        Nombre(nombre?.nombres.primero() + " "+ nombre?.apellido.primero())
+                        Nombre(nombre?.nombres.primero())
                     }else{
                         val nombre = viewModel.getUsuario(deuda.idUsuario2).collectAsState(initial = null).value
-                        Nombre(nombre?.nombres.primero() + " "+ nombre?.apellido.primero())
+                        Nombre(nombre?.nombres.primero())
                     }
                 }else{
                     Nombre(deuda.titulo)

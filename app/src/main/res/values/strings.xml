@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Chihuan</string>
+    <string name="web_client_id">545174315785-do5lh5dvd2p0f3si58965mq09anima33.apps.googleusercontent.com</string>
     <string name="title_deudas">Deudas</string>
     <string name="agregar_deuda">Agregar Deuda</string>
     <string name="title_preferencias">Prefencias</string>
